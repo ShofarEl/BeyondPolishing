@@ -1,0 +1,421 @@
+# Beyond Polishing - Comprehensive .gitignore
+
+# ===================================
+# Environment Variables & Secrets
+# ===================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.example
+*.env
+.env
+backend/.env
+frontend/.env
+
+# API Keys and Secrets
+config/secrets.json
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# ===================================
+# Node.js Dependencies
+# ===================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Package manager files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ===================================
+# Build Outputs
+# ===================================
+# Frontend build
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.next/
+frontend/out/
+
+# Backend build
+backend/dist/
+backend/build/
+backend/lib/
+
+# Static files
+public/uploads/
+uploads/
+static/uploads/
+
+# ===================================
+# Development Tools
+# ===================================
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ESLint cache
+.eslintcache
+
+# Prettier cache
+.prettiercache
+
+# TypeScript cache
+*.tsbuildinfo
+
+# ===================================
+# Testing
+# ===================================
+# Test coverage
+coverage/
+*.lcov
+.nyc_output/
+
+# Jest
+jest.config.js.bak
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+
+# ===================================
+# Logs
+# ===================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# ===================================
+# Database
+# ===================================
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+database.json
+
+# MongoDB dumps
+dump/
+*.bson
+
+# Database backups
+backup/
+*.backup
+*.sql
+
+# ===================================
+# Research Data & Analytics
+# ===================================
+# Participant data exports
+data/exports/
+research-data/
+participant-data/
+analytics/
+reports/
+
+# CSV exports
+*.csv
+data/*.csv
+exports/*.csv
+
+# Research files (if sensitive)
+research/sensitive/
+irb-documents/
+participant-info/
+
+# ===================================
+# Temporary Files
+# ===================================
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary folders
+tmp/
+temp/
+.tmp/
+.temp/
+
+# ===================================
+# Cache Directories
+# ===================================
+.cache/
+.parcel-cache/
+.vite/
+.next/
+.nuxt/
+.output/
+
+# Webpack
+.webpack/
+
+# Rollup
+.rollup.cache/
+
+# ===================================
+# Runtime and Process Files
+# ===================================
+# Process IDs
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Dependency directories
+jspm_packages/
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# ===================================
+# Deployment & Production
+# ===================================
+# Production builds
+build/
+dist/
+
+# Deployment files
+.vercel/
+.netlify/
+.firebase/
+
+# Docker
+Dockerfile.prod
+docker-compose.prod.yml
+.dockerignore
+
+# Kubernetes
+k8s/secrets/
+*.kubeconfig
+
+# ===================================
+# Development Servers
+# ===================================
+# Local development
+.local
+.cache
+
+# Hot reload
+.hot-update.*
+
+# ===================================
+# Documentation
+# ===================================
+# Generated docs
+docs/build/
+docs/dist/
+.docusaurus/
+
+# ===================================
+# Monitoring & Analytics
+# ===================================
+# Error tracking
+.sentry/
+sentry.properties
+
+# Analytics
+analytics.json
+metrics/
+
+# ===================================
+# Backup Files
+# ===================================
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+*~
+
+# ===================================
+# Archive Files
+# ===================================
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# ===================================
+# System Files
+# ===================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# ===================================
+# Security & Certificates
+# ===================================
+# SSL certificates
+*.crt
+*.key
+*.pem
+*.p12
+*.pfx
+
+# SSH keys
+id_rsa
+id_rsa.pub
+known_hosts
+
+# GPG keys
+*.gpg
+*.asc
+
+# ===================================
+# Research-Specific Files
+# ===================================
+# Participant consent forms (if stored locally)
+consent-forms/
+participant-agreements/
+
+# Research analysis
+analysis/raw-data/
+spss-files/
+r-workspace/
+*.Rdata
+*.rds
+
+# Survey data
+survey-responses/
+qualtrics-exports/
+
+# ===================================
+# Custom Application Files
+# ===================================
+# User uploads
+uploads/
+user-files/
+attachments/
+
+# Generated reports
+reports/generated/
+exports/
+
+# Session files
+sessions/
+.sessions/
+
+# ===================================
+# Performance & Profiling
+# ===================================
+# Profiling data
+*.prof
+*.heapsnapshot
+*.cpuprofile
+
+# Benchmarks
+benchmark-results/
+performance-logs/
+
+# ===================================
+# Miscellaneous
+# ===================================
+# Editor directories and files
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ===================================
+# Project-Specific Exclusions
+# ===================================
+# Add any project-specific files here
+# Example:
+# custom-config.json
+# local-overrides/

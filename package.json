@@ -1,0 +1,19 @@
+{
+  "name": "ai-data-science-problem-framing",
+  "version": "1.0.0",
+  "description": "AI-Powered Data Science Problem Framing App for educational research",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "keywords": ["ai", "data-science", "education", "problem-framing", "research"],
+  "author": "Research Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
