@@ -1,0 +1,24 @@
+# Browsers that we support
+
+# Production browsers
+> 0.5%
+last 2 versions
+not dead
+not ie 11
+
+# Mobile browsers
+iOS >= 13.4
+Android >= 81
+
+# Desktop browsers
+Chrome >= 87
+Firefox >= 78
+Safari >= 13.1
+Edge >= 88
+
+# Specific mobile optimizations
+and_chr >= 87
+and_ff >= 78
+ios_saf >= 13.4
+op_mob >= 64
+samsung >= 14.0

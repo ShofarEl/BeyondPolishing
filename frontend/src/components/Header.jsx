@@ -94,7 +94,7 @@ const Header = () => {
                   </button>
                 </div>
 
-                {/* Mobile menu button */}
+                {/* Mobile menu button - Authenticated */}
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="md:hidden p-2 text-gray-400 hover:text-gray-600 transition-colors"
@@ -108,24 +108,39 @@ const Header = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-3">
-                <Link
-                  to="/login"
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                {/* Desktop - Non-authenticated */}
+                <div className="hidden md:flex items-center space-x-3">
+                  <Link
+                    to="/login"
+                    className="text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="btn btn-primary"
+                  >
+                    Join Study
+                  </Link>
+                </div>
+
+                {/* Mobile menu button - Non-authenticated */}
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="md:hidden p-2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="btn btn-primary"
-                >
-                  Join Study
-                </Link>
+                  {isMobileMenuOpen ? (
+                    <X className="w-5 h-5" />
+                  ) : (
+                    <Menu className="w-5 h-5" />
+                  )}
+                </button>
               </div>
             )}
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Authenticated Users */}
         {isMobileMenuOpen && isAuthenticated && (
           <div className="md:hidden border-t border-gray-200 bg-white">
             <div className="px-4 py-2 space-y-1">
@@ -160,6 +175,38 @@ const Header = () => {
                 <LogOut className="w-4 h-4" />
                 <span>Logout</span>
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Menu - Non-authenticated Users */}
+        {isMobileMenuOpen && !isAuthenticated && (
+          <div className="md:hidden border-t border-gray-200 bg-white">
+            <div className="px-4 py-2 space-y-1">
+              <Link
+                to="/"
+                onClick={closeMobileMenu}
+                className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
+              >
+                <Home className="w-4 h-4" />
+                <span>Home</span>
+              </Link>
+              <Link
+                to="/login"
+                onClick={closeMobileMenu}
+                className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
+              >
+                <User className="w-4 h-4" />
+                <span>Login</span>
+              </Link>
+              <Link
+                to="/register"
+                onClick={closeMobileMenu}
+                className="flex items-center space-x-2 px-3 py-2 bg-primary-600 text-white hover:bg-primary-700 rounded-md transition-colors"
+              >
+                <Brain className="w-4 h-4" />
+                <span>Join Study</span>
+              </Link>
             </div>
           </div>
         )}

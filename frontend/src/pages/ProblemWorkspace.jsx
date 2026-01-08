@@ -314,6 +314,101 @@ const ProblemWorkspace = () => {
               </div>
             </div>
 
+            {/* AI Assistant - Mobile: Show right after problem statement */}
+            <div className="lg:hidden">
+              {/* {problem?.status !== 'completed' && ( */}
+              {true && (
+                <div className="card">
+                  <div className="card-header">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      AI Assistant
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Get AI help to refine or challenge your problem statement
+                    </p>
+                  </div>
+                  <div className="card-body space-y-4">
+                    {/* Additional Context */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Additional Context (Optional)
+                      </label>
+                      <textarea
+                        value={userInput}
+                        onChange={(e) => setUserInput(e.target.value)}
+                        placeholder="Provide any additional context or specific questions..."
+                        className="textarea h-20"
+                      />
+                    </div>
+
+                    {/* Prompt Type Buttons */}
+                    <div className="grid grid-cols-1 gap-3">
+                      <button
+                        onClick={() => handleGenerateResponse('editor')}
+                        disabled={isGenerating || aiLoading}
+                        className={`btn flex items-center space-x-3 p-4 ${
+                          nextPromptType === 'editor' 
+                            ? 'btn-primary' 
+                            : 'btn-secondary'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <Target className="w-5 h-5" />
+                          <div className="text-left">
+                            <div className="font-medium">Editor Mode</div>
+                            <div className="text-xs opacity-75">Refine & clarify</div>
+                          </div>
+                        </div>
+                        {nextPromptType === 'editor' && (
+                          <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">
+                            Suggested
+                          </span>
+                        )}
+                      </button>
+
+                      <button
+                        onClick={() => handleGenerateResponse('challenger')}
+                        disabled={isGenerating || aiLoading}
+                        className={`btn flex items-center space-x-3 p-4 ${
+                          nextPromptType === 'challenger' 
+                            ? 'btn-primary' 
+                            : 'btn-secondary'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <Brain className="w-5 h-5" />
+                          <div className="text-left">
+                            <div className="font-medium">Challenger Mode</div>
+                            <div className="text-xs opacity-75">Challenge & reframe</div>
+                          </div>
+                        </div>
+                        {nextPromptType === 'challenger' && (
+                          <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">
+                            Suggested
+                          </span>
+                        )}
+                      </button>
+                    </div>
+
+                    {isGenerating && (
+                      <div className="flex items-center justify-center py-4">
+                        <LoadingSpinner size="sm" text="Generating AI response..." />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Current AI Response - Mobile */}
+              {currentResponse && (
+                <AIResponseCard
+                  interaction={currentResponse}
+                  isCurrent={true}
+                  onRate={() => setShowRatingModal(true)}
+                />
+              )}
+            </div>
+
             {/* AI Interaction History */}
             {problem?.interactions && problem.interactions.length > 0 && (
               <div className="card">
@@ -337,9 +432,9 @@ const ProblemWorkspace = () => {
             )}
           </div>
 
-          {/* AI Assistant Sidebar */}
-          <div className="order-2 lg:order-2 lg:col-span-2 space-y-4 lg:space-y-6">
-            {/* AI Prompt Controls - Temporarily enabled for testing */}
+          {/* AI Assistant Sidebar - Desktop Only */}
+          <div className="hidden lg:block order-2 lg:order-2 lg:col-span-2 space-y-4 lg:space-y-6">
+            {/* AI Prompt Controls - Desktop */}
             {/* {problem?.status !== 'completed' && ( */}
             {true && (
               <div className="card">
@@ -423,7 +518,7 @@ const ProblemWorkspace = () => {
               </div>
             )}
 
-            {/* Current AI Response */}
+            {/* Current AI Response - Desktop */}
             {currentResponse && (
               <AIResponseCard
                 interaction={currentResponse}
@@ -432,7 +527,7 @@ const ProblemWorkspace = () => {
               />
             )}
 
-            {/* Study Group Info */}
+            {/* Study Group Info - Desktop */}
             <div className="card">
               <div className="card-header">
                 <h3 className="text-lg font-semibold text-gray-900">

@@ -1,9 +1,26 @@
 import axios from 'axios'
 import useAuthStore from '../store/authStore'
 
+// Determine API URL based on environment
+const getApiUrl = () => {
+  // Check if we have a custom API URL from environment
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL
+  }
+  
+  // Fallback logic for different environments
+  if (import.meta.env.PROD) {
+    // Production - Railway backend URL
+    return 'https://beyondpolishing-production.up.railway.app/api'
+  }
+  
+  // Development
+  return 'http://localhost:3001/api'
+}
+
 // Create axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3001/api',
+  baseURL: getApiUrl(),
   timeout: 30000,
   headers: {
     'Content-Type': 'application/json',

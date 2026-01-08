@@ -1,4 +1,6 @@
 {
+  "version": 2,
+  "name": "beyond-polishing-frontend",
   "builds": [
     {
       "src": "package.json",
@@ -10,11 +12,27 @@
   ],
   "routes": [
     {
+      "src": "/assets/(.*)",
+      "headers": {
+        "cache-control": "max-age=31536000, immutable"
+      }
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
   ],
   "env": {
-    "VITE_API_URL": "@vite_api_url"
+    "VITE_NODE_ENV": "production",
+    "VITE_API_URL": "https://beyondpolishing-production.up.railway.app/api"
+  },
+  "build": {
+    "env": {
+      "VITE_NODE_ENV": "production",
+      "VITE_API_URL": "https://beyondpolishing-production.up.railway.app/api"
+    }
   }
 }

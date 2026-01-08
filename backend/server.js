@@ -31,9 +31,13 @@ app.use(cors({
     'http://localhost:3000',
     'http://localhost:3001', 
     'http://localhost:5173',
+    'https://beyond-polishing-frontend.vercel.app',
+    'https://beyondpolishing-production.up.railway.app',
     process.env.FRONTEND_URL
   ].filter(Boolean), // Remove any undefined values
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // Rate limiting
@@ -65,6 +69,16 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
+// Health check endpoint for Railway
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/problems', problemRoutes);
 app.use('/api/ai', aiRoutes);
