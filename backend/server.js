@@ -31,6 +31,7 @@ app.use(cors({
     'http://localhost:3000',
     'http://localhost:3001', 
     'http://localhost:5173',
+    'https://beyond-polishing.vercel.app',
     'https://beyond-polishing-frontend.vercel.app',
     'https://beyondpolishing-production.up.railway.app',
     process.env.FRONTEND_URL

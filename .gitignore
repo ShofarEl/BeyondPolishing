@@ -419,3 +419,5 @@ tramp
 # Example:
 # custom-config.json
 # local-overrides/
+.vercel
+.env*.local
