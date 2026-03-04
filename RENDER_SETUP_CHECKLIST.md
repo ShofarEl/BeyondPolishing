@@ -11,6 +11,13 @@
 5. **Render will detect**: `backend/render.yaml` automatically
 6. **Click**: "Apply" to create services
 
+**The render.yaml is configured with:**
+- **Root Directory**: `backend`
+- **Build Command**: `npm install`
+- **Start Command**: `npm start`
+- **Environment**: Node.js
+- **Plan**: Free tier
+
 ### 2. Set Required Environment Variables (2 minutes)
 
 After blueprint deployment, go to your web service → "Environment" tab and add:
