@@ -33,7 +33,6 @@ app.use(cors({
     'http://localhost:5173',
     'https://beyond-polishing.vercel.app',
     'https://beyond-polishing-frontend.vercel.app',
-    'https://beyondpolishing-production.up.railway.app',
     process.env.FRONTEND_URL
   ].filter(Boolean), // Remove any undefined values
   credentials: true,
@@ -70,7 +69,7 @@ app.get('/health', (req, res) => {
 });
 
 // API routes
-// Health check endpoint for Railway
+// Health check endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',

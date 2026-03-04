@@ -356,7 +356,7 @@ npm run generate-reports
 
 ### Production Setup
 
-1. **Backend Deployment** (Render/Railway)
+1. **Backend Deployment** (Render)
    ```bash
    # Build and deploy backend
    cd backend

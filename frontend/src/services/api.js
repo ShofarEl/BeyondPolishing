@@ -10,8 +10,8 @@ const getApiUrl = () => {
   
   // Fallback logic for different environments
   if (import.meta.env.PROD) {
-    // Production - Railway backend URL
-    return 'https://beyondpolishing-production.up.railway.app/api'
+    // Production - Render backend URL
+    return 'https://ds-problem-framing-backend.onrender.com/api'
   }
   
   // Development

@@ -27,12 +27,12 @@
   ],
   "env": {
     "VITE_NODE_ENV": "production",
-    "VITE_API_URL": "https://beyondpolishing-production.up.railway.app/api"
+    "VITE_API_URL": "https://ds-problem-framing-backend.onrender.com/api"
   },
   "build": {
     "env": {
       "VITE_NODE_ENV": "production",
-      "VITE_API_URL": "https://beyondpolishing-production.up.railway.app/api"
+      "VITE_API_URL": "https://ds-problem-framing-backend.onrender.com/api"
     }
   }
 }
