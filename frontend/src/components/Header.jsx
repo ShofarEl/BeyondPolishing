@@ -111,16 +111,10 @@ const Header = () => {
                 {/* Desktop - Non-authenticated */}
                 <div className="hidden md:flex items-center space-x-3">
                   <Link
-                    to="/login"
-                    className="text-gray-600 hover:text-gray-900 transition-colors"
-                  >
-                    Login
-                  </Link>
-                  <Link
                     to="/register"
                     className="btn btn-primary"
                   >
-                    Join Study
+                    Start Study
                   </Link>
                 </div>
 
@@ -192,20 +186,12 @@ const Header = () => {
                 <span>Home</span>
               </Link>
               <Link
-                to="/login"
-                onClick={closeMobileMenu}
-                className="flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors"
-              >
-                <User className="w-4 h-4" />
-                <span>Login</span>
-              </Link>
-              <Link
                 to="/register"
                 onClick={closeMobileMenu}
                 className="flex items-center space-x-2 px-3 py-2 bg-primary-600 text-white hover:bg-primary-700 rounded-md transition-colors"
               >
                 <Brain className="w-4 h-4" />
-                <span>Join Study</span>
+                <span>Start Study</span>
               </Link>
             </div>
           </div>
