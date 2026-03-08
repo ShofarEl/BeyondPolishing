@@ -44,13 +44,14 @@ router.post('/register', [
 
     const { username, email, demographicData, studyGroup } = req.body;
 
-    // Check if email already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        error: 'Email address is already registered'
-      });
+    // For anonymous studies, check if this exact email exists (it shouldn't since we generate unique ones)
+    // But if it does, just generate a new unique email
+    let finalEmail = email;
+    let emailExists = await User.findOne({ email: finalEmail });
+    
+    if (emailExists) {
+      // Generate a truly unique email
+      finalEmail = `anon_${Date.now()}_${Math.random().toString(36).substring(2, 9)}@anonymous.study`;
     }
 
     // Use the study group provided
@@ -62,7 +63,7 @@ router.post('/register', [
     // Create new user with simplified data - consent given immediately for one-time study
     const user = new User({
       participantId,
-      email,
+      email: finalEmail,
       username,
       studyGroup: assignedStudyGroup,
       demographicData: {
