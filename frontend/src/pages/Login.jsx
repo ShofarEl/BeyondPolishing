@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, User, AlertCircle, Mail, Search, Check } from 'lucide-react'
+import { ArrowLeft, User, AlertCircle, Mail, Search, Check, Shield } from 'lucide-react'
 import useAuthStore from '../store/authStore'
 import LoadingSpinner from '../components/LoadingSpinner'
 import toast from 'react-hot-toast'
@@ -90,11 +90,17 @@ const Login = () => {
         
         <div className="mt-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900">
-            Returning Participant
+            Continue Your Study Session
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Enter your participant ID to continue
+            Enter your anonymous Participant ID to continue
           </p>
+          <div className="mt-4 inline-flex items-center px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+            <Shield className="w-5 h-5 text-blue-600 mr-2" />
+            <span className="text-sm font-medium text-blue-800">
+              Your identity remains anonymous
+            </span>
+          </div>
         </div>
       </div>
 
@@ -242,34 +248,31 @@ const Login = () => {
 
         <div className="mt-8 card">
           <div className="card-body">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              Need Help Finding Your ID?
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <Shield className="w-5 h-5 mr-2 text-green-600" />
+              Your Privacy is Protected
             </h3>
             <div className="text-sm text-gray-600 space-y-3">
-              <p>Your participant ID was generated when you registered for the study.</p>
+              <p>Your participant ID is an anonymous identifier that:</p>
               
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                <p className="font-medium text-yellow-800 mb-2">📋 Where to find your ID:</p>
-                <ul className="list-disc list-inside space-y-1 text-yellow-700">
-                  <li>Check your browser's saved passwords</li>
-                  <li>Look for a screenshot or note you took during registration</li>
-                  <li>Check your email if you received a confirmation</li>
-                  <li>Ask the research team if you remember registering</li>
-                </ul>
-              </div>
+              <ul className="list-disc list-inside space-y-1 ml-4">
+                <li>Does NOT contain your name or personal information</li>
+                <li>Cannot be traced back to your identity</li>
+                <li>Is only used to link your study sessions together</li>
+                <li>Keeps your responses completely anonymous</li>
+              </ul>
               
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
                 <p className="font-medium text-blue-800 mb-1">📝 ID Format:</p>
                 <p className="text-blue-700 font-mono">P + timestamp + random letters</p>
                 <p className="text-blue-700 font-mono">Example: <code className="bg-blue-100 px-1 rounded">P1703123456abc</code></p>
               </div>
               
-              <p className="text-center">
-                <strong>Can't find it?</strong> You can{' '}
+              <p className="text-center pt-2">
+                <strong>Can't find your ID?</strong> You can{' '}
                 <Link to="/register" className="text-primary-600 hover:text-primary-700 font-medium">
-                  register again
-                </Link>{' '}
-                with the same information.
+                  start a new session
+                </Link>
               </p>
             </div>
           </div>

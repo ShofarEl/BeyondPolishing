@@ -4,7 +4,6 @@ import useAuthStore from './store/authStore'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Register from './pages/Register'
-import Login from './pages/Login'
 import Consent from './pages/Consent'
 import Dashboard from './pages/Dashboard'
 import ProblemWorkspace from './pages/ProblemWorkspace'
@@ -34,7 +33,6 @@ function App() {
           {/* Public routes */}
           <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
           {/* Protected routes */}
           <Route path="/" element={<Layout />}>
             <Route

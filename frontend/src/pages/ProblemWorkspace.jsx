@@ -288,21 +288,27 @@ const ProblemWorkspace = () => {
                   Describe your data science problem. Be as specific as possible about objectives, 
                   data sources, and success metrics.
                 </p>
+                <div className="mt-2 text-xs text-gray-500 space-y-1">
+                  <p><strong>Expected:</strong> 100-500 words describing a data science problem</p>
+                  <p><strong>Include:</strong> Clear objective, stakeholders, data sources, and success metrics</p>
+                </div>
               </div>
               <div className="card-body">
                 <textarea
                   value={currentProblem}
                   onChange={(e) => setCurrentProblem(e.target.value)}
-                  placeholder="Enter your data science problem statement here..."
+                  placeholder="Example: Design a predictive model to identify hospital patients at high risk of readmission within 30 days. Using electronic health records (EHR) data including demographics, diagnoses, medications, and previous admissions..."
                   className="textarea h-40"
                   // disabled={problem?.status === 'completed'} // Temporarily enabled for testing
                 />
                 
                 {problem?.status !== 'completed' && (
                   <div className="mt-4 flex justify-between items-center">
-                    <span className="text-sm text-gray-500">
-                      {currentProblem.length}/2000 characters
-                    </span>
+                    <div className="text-sm text-gray-500">
+                      <span className="font-medium">{currentProblem.trim().split(/\s+/).filter(w => w.length > 0).length} words</span>
+                      <span className="mx-2">•</span>
+                      <span>{currentProblem.length}/2000 characters</span>
+                    </div>
                     <button
                       onClick={handleSaveProblem}
                       className="btn btn-secondary text-sm"
@@ -324,8 +330,11 @@ const ProblemWorkspace = () => {
                       AI Assistant
                     </h3>
                     <p className="text-sm text-gray-600">
-                      Get AI help to refine or challenge your problem statement
+                      The AI will help you refine your problem statement. You'll interact with both modes during this study.
                     </p>
+                    <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-xs text-blue-800">
+                      <strong>Note:</strong> You'll use both Editor and Challenger modes. The system will suggest which mode to use next to ensure balanced data collection.
+                    </div>
                   </div>
                   <div className="card-body space-y-4">
                     {/* Additional Context */}
@@ -346,22 +355,22 @@ const ProblemWorkspace = () => {
                       <button
                         onClick={() => handleGenerateResponse('editor')}
                         disabled={isGenerating || aiLoading}
-                        className={`btn flex items-center space-x-3 p-4 ${
+                        className={`btn flex items-center justify-between p-4 ${
                           nextPromptType === 'editor' 
                             ? 'btn-primary' 
                             : 'btn-secondary'
                         }`}
                       >
-                        <div className="flex items-center space-x-2">
-                          <Target className="w-5 h-5" />
-                          <div className="text-left">
+                        <div className="flex items-center space-x-2 text-left">
+                          <Target className="w-5 h-5 flex-shrink-0" />
+                          <div>
                             <div className="font-medium">Editor Mode</div>
-                            <div className="text-xs opacity-75">Refine & clarify</div>
+                            <div className="text-xs opacity-75">Helps refine and clarify your statement with specific suggestions</div>
                           </div>
                         </div>
                         {nextPromptType === 'editor' && (
-                          <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">
-                            Suggested
+                          <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded whitespace-nowrap ml-2">
+                            Suggested Next
                           </span>
                         )}
                       </button>
@@ -369,22 +378,22 @@ const ProblemWorkspace = () => {
                       <button
                         onClick={() => handleGenerateResponse('challenger')}
                         disabled={isGenerating || aiLoading}
-                        className={`btn flex items-center space-x-3 p-4 ${
+                        className={`btn flex items-center justify-between p-4 ${
                           nextPromptType === 'challenger' 
                             ? 'btn-primary' 
                             : 'btn-secondary'
                         }`}
                       >
-                        <div className="flex items-center space-x-2">
-                          <Brain className="w-5 h-5" />
-                          <div className="text-left">
+                        <div className="flex items-center space-x-2 text-left">
+                          <Brain className="w-5 h-5 flex-shrink-0" />
+                          <div>
                             <div className="font-medium">Challenger Mode</div>
-                            <div className="text-xs opacity-75">Challenge & reframe</div>
+                            <div className="text-xs opacity-75">Challenges assumptions and proposes alternative framings</div>
                           </div>
                         </div>
                         {nextPromptType === 'challenger' && (
-                          <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded">
-                            Suggested
+                          <span className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded whitespace-nowrap ml-2">
+                            Suggested Next
                           </span>
                         )}
                       </button>
@@ -452,12 +461,18 @@ const ProblemWorkspace = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Additional Context (Optional)
                     </label>
+                    <p className="text-xs text-gray-500 mb-2">
+                      Ask specific questions or provide context for the AI (e.g., "Focus on privacy concerns" or "Suggest alternative metrics")
+                    </p>
                     <textarea
                       value={userInput}
                       onChange={(e) => setUserInput(e.target.value)}
-                      placeholder="Provide any additional context or specific questions..."
+                      placeholder="Example: Can you suggest alternative stakeholders for this problem? What data privacy concerns should I consider?"
                       className="textarea h-20"
                     />
+                    <div className="mt-1 text-xs text-gray-500">
+                      {userInput.trim().split(/\s+/).filter(w => w.length > 0).length} words
+                    </div>
                   </div>
 
                   {/* Prompt Type Buttons */}
@@ -605,14 +620,20 @@ const ProblemWorkspace = () => {
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Your Reasoning
+                  Your Reasoning (minimum 50 words)
                 </label>
+                <p className="text-xs text-gray-500 mb-2">
+                  Explain why you chose this problem formulation. What factors influenced your decisions? What trade-offs did you consider?
+                </p>
                 <textarea
                   value={finalReasoning}
                   onChange={(e) => setFinalReasoning(e.target.value)}
                   className="textarea h-32"
-                  placeholder="Explain your reasoning for this problem formulation. What factors influenced your decisions? What trade-offs did you consider?"
+                  placeholder="Example: I chose this problem because it addresses a critical healthcare issue with clear stakeholders (hospital administrators and care coordinators). The AI feedback helped me refine the success metrics and consider data privacy concerns..."
                 />
+                <div className="mt-1 text-xs text-gray-500">
+                  {finalReasoning.trim().split(/\s+/).filter(w => w.length > 0).length} words (minimum 50 required)
+                </div>
               </div>
             </div>
 

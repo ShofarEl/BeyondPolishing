@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, User, GraduationCap, Database, AlertCircle, Mail, AtSign } from 'lucide-react'
-import useAuthStore from '../store/authStore'
+import { ArrowLeft, GraduationCap, Database, AlertCircle, Shield, CheckCircle } from 'lucide-react'
 import LoadingSpinner from '../components/LoadingSpinner'
 import toast from 'react-hot-toast'
+import api from '../services/api'
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const { register: registerUser } = useAuthStore()
+  const [consent, setConsent] = useState(false)
   const navigate = useNavigate()
 
   const {
@@ -21,21 +21,45 @@ const Register = () => {
   const studyGroup = watch('studyGroup')
 
   const onSubmit = async (data) => {
+    if (!consent) {
+      toast.error('Please provide consent to participate')
+      return
+    }
+
     setIsLoading(true)
     try {
-      const result = await registerUser(data)
+      // Generate anonymous participant ID
+      const participantId = `P${Date.now()}${Math.random().toString(36).substring(2, 7).toUpperCase()}`
       
-      if (result.success) {
-        toast.success('Registration successful!')
-        // Store participant ID for easy access
-        localStorage.setItem('tempParticipantId', result.data.participantId)
-        // Navigate to consent page
-        navigate('/consent')
+      // Create user with minimal data
+      const userData = {
+        participantId,
+        username: `Participant_${participantId.substring(1, 8)}`, // Auto-generate username
+        email: `${participantId}@anonymous.study`, // Dummy email for backend compatibility
+        studyGroup: data.studyGroup,
+        demographicData: {
+          academicLevel: data.academicLevel,
+          dataScienceExperience: data.dataScienceExperience
+        }
+      }
+
+      const response = await api.post('/auth/register', userData)
+      
+      if (response.data.success) {
+        // Store session data
+        localStorage.setItem('authToken', response.data.data.token)
+        localStorage.setItem('participantId', participantId)
+        localStorage.setItem('studyGroup', data.studyGroup)
+        
+        toast.success('Starting study...')
+        // Go directly to workspace
+        navigate('/workspace/new')
       } else {
-        toast.error(result.error || 'Registration failed')
+        toast.error(response.data.error || 'Failed to start study')
       }
     } catch (error) {
-      toast.error('Registration failed. Please try again.')
+      console.error('Registration error:', error)
+      toast.error('Failed to start study. Please try again.')
     } finally {
       setIsLoading(false)
     }
@@ -53,163 +77,81 @@ const Register = () => {
         
         <div className="mt-8 text-center">
           <h2 className="text-3xl font-bold text-gray-900">
-            Join Our Research Study
+            AI-Powered Problem Framing Study
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            Help us understand how AI can improve data science problem framing
+            Complete this one-time study session (≈30 minutes)
           </p>
+          <div className="mt-4 inline-flex items-center px-4 py-2 bg-green-50 border border-green-200 rounded-lg">
+            <Shield className="w-5 h-5 text-green-600 mr-2" />
+            <span className="text-sm font-medium text-green-800">
+              100% Anonymous - No email or login required
+            </span>
+          </div>
         </div>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="card">
           <div className="card-body">
+            {/* Consent Section */}
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h3 className="text-sm font-semibold text-blue-900 mb-3">Informed Consent</h3>
+              <div className="text-xs text-blue-800 space-y-2 mb-3">
+                <p>By participating, you agree that:</p>
+                <ul className="list-disc list-inside space-y-1 ml-2">
+                  <li>Your participation is voluntary (≈30 minutes)</li>
+                  <li>Your responses will be collected anonymously for research</li>
+                  <li>You can stop at any time</li>
+                  <li>You are at least 18 years old</li>
+                </ul>
+              </div>
+              <label className="flex items-start cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={consent}
+                  onChange={(e) => setConsent(e.target.checked)}
+                  className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                />
+                <span className="text-xs text-blue-900">
+                  I consent to participate in this research study
+                </span>
+              </label>
+            </div>
+
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Email */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <input
-                    type="email"
-                    {...register('email', {
-                      required: 'Email address is required',
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: 'Invalid email address'
-                      }
-                    })}
-                    placeholder="your.email@example.com"
-                    className="input pr-10"
-                  />
-                  <Mail className="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none" />
-                </div>
-                {errors.email && (
-                  <p className="mt-1 text-sm text-error-600 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.email.message}
-                  </p>
-                )}
-              </div>
-
-              {/* Username */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Username
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    {...register('username', {
-                      required: 'Username is required',
-                      minLength: {
-                        value: 2,
-                        message: 'Username must be at least 2 characters'
-                      },
-                      maxLength: {
-                        value: 50,
-                        message: 'Username must not exceed 50 characters'
-                      }
-                    })}
-                    placeholder="Choose a username"
-                    className="input pr-10"
-                  />
-                  <AtSign className="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none" />
-                </div>
-                {errors.username && (
-                  <p className="mt-1 text-sm text-error-600 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.username.message}
-                  </p>
-                )}
-              </div>
-
               {/* Study Group Assignment */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Study Group Assignment
-                </label>
-                <div className="grid grid-cols-1 gap-3">
-                  <label className="relative cursor-pointer">
-                    <input
-                      type="radio"
-                      value="editor-first"
-                      {...register('studyGroup', { required: 'Please select a study group' })}
-                      className="sr-only"
-                    />
-                    <div className={`p-4 border-2 rounded-lg transition-colors ${
-                      studyGroup === 'editor-first'
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}>
-                      <div className="flex items-center space-x-3">
-                        <User className="w-5 h-5 text-primary-600" />
-                        <div>
-                          <div className="font-medium text-gray-900">Editor-First Group</div>
-                          <div className="text-sm text-gray-600">
-                            Start with refinement prompts, then challenger prompts
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-                  
-                  <label className="relative cursor-pointer">
-                    <input
-                      type="radio"
-                      value="challenger-first"
-                      {...register('studyGroup', { required: 'Please select a study group' })}
-                      className="sr-only"
-                    />
-                    <div className={`p-4 border-2 rounded-lg transition-colors ${
-                      studyGroup === 'challenger-first'
-                        ? 'border-primary-500 bg-primary-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}>
-                      <div className="flex items-center space-x-3">
-                        <Database className="w-5 h-5 text-warning-600" />
-                        <div>
-                          <div className="font-medium text-gray-900">Challenger-First Group</div>
-                          <div className="text-sm text-gray-600">
-                            Start with challenger prompts, then refinement prompts
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-                </div>
-                {errors.studyGroup && (
-                  <p className="mt-1 text-sm text-error-600 flex items-center">
-                    <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.studyGroup.message}
-                  </p>
-                )}
-              </div>
+              {/* Study Group - Auto-assigned, hidden from user */}
+              <input
+                type="hidden"
+                {...register('studyGroup')}
+                value={Math.random() < 0.5 ? 'editor-first' : 'challenger-first'}
+              />
 
               {/* Academic Level */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Academic Level
+                  What is your academic level?
                 </label>
                 <div className="relative">
                   <select
-                    {...register('demographicData.academicLevel', {
+                    {...register('academicLevel', {
                       required: 'Please select your academic level'
                     })}
                     className="input pr-10"
                   >
                     <option value="">Select your level</option>
-                    <option value="undergraduate">Undergraduate</option>
-                    <option value="graduate">Graduate</option>
+                    <option value="undergraduate">Undergraduate Student</option>
+                    <option value="graduate">Graduate Student (Master's)</option>
+                    <option value="postgraduate">Postgraduate (PhD)</option>
                     <option value="other">Other</option>
                   </select>
                   <GraduationCap className="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none" />
                 </div>
-                {errors.demographicData?.academicLevel && (
+                {errors.academicLevel && (
                   <p className="mt-1 text-sm text-error-600 flex items-center">
                     <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.demographicData.academicLevel.message}
+                    {errors.academicLevel.message}
                   </p>
                 )}
               </div>
@@ -217,55 +159,45 @@ const Register = () => {
               {/* Data Science Experience */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Data Science Experience
+                  What is your data science experience?
                 </label>
                 <div className="relative">
                   <select
-                    {...register('demographicData.dataScienceExperience', {
+                    {...register('dataScienceExperience', {
                       required: 'Please select your experience level'
                     })}
                     className="input pr-10"
                   >
                     <option value="">Select experience level</option>
                     <option value="none">No experience</option>
-                    <option value="basic">Basic (1-2 courses)</option>
-                    <option value="intermediate">Intermediate (3+ courses or projects)</option>
-                    <option value="advanced">Advanced (Professional experience)</option>
+                    <option value="basic">Basic (1 course or self-study)</option>
+                    <option value="intermediate">Intermediate (multiple courses or projects)</option>
+                    <option value="advanced">Advanced (professional or extensive work)</option>
                   </select>
                   <Database className="absolute right-3 top-3 w-4 h-4 text-gray-400 pointer-events-none" />
                 </div>
-                {errors.demographicData?.dataScienceExperience && (
+                {errors.dataScienceExperience && (
                   <p className="mt-1 text-sm text-error-600 flex items-center">
                     <AlertCircle className="w-4 h-4 mr-1" />
-                    {errors.demographicData.dataScienceExperience.message}
+                    {errors.dataScienceExperience.message}
                   </p>
                 )}
-              </div>
-
-              {/* Recruitment Source */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  How did you hear about this study? (Optional)
-                </label>
-                <input
-                  type="text"
-                  {...register('recruitmentSource')}
-                  placeholder="e.g., Course announcement, flyer, friend..."
-                  className="input"
-                />
               </div>
 
               {/* Submit Button */}
               <div>
                 <button
                   type="submit"
-                  disabled={isLoading}
-                  className="btn btn-primary w-full flex items-center justify-center"
+                  disabled={isLoading || !consent}
+                  className="btn btn-primary w-full flex items-center justify-center space-x-2"
                 >
                   {isLoading ? (
                     <LoadingSpinner size="sm" />
                   ) : (
-                    'Join Study'
+                    <>
+                      <CheckCircle className="w-5 h-5" />
+                      <span>Start Study</span>
+                    </>
                   )}
                 </button>
               </div>
@@ -273,28 +205,20 @@ const Register = () => {
           </div>
         </div>
 
-        {/* Additional Info */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            Already a participant?{' '}
-            <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
-              Login here
-            </Link>
-          </p>
-        </div>
-
         {/* Study Information */}
         <div className="mt-8 card">
           <div className="card-body">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              About This Study
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+              <Shield className="w-5 h-5 mr-2 text-green-600" />
+              What to Expect
             </h3>
             <ul className="text-sm text-gray-600 space-y-2">
-              <li>• Duration: Approximately 30 minutes</li>
-              <li>• Tasks: 3-4 data science problem framing exercises</li>
-              <li>• Compensation: Course credit or small incentive</li>
-              <li>• Privacy: All data is anonymized and secure</li>
-              <li>• Voluntary: You can withdraw at any time</li>
+              <li>• <strong>Duration:</strong> Approximately 30 minutes (one-time session)</li>
+              <li>• <strong>Task:</strong> Write a data science problem statement with AI assistance</li>
+              <li>• <strong>AI Modes:</strong> You'll interact with both Editor and Challenger AI modes</li>
+              <li>• <strong>Data Collected:</strong> Your problem statements, AI interactions, and ratings</li>
+              <li>• <strong>Privacy:</strong> Completely anonymous - no personal information collected</li>
+              <li>• <strong>No Login:</strong> This is a one-time session - no account or email needed</li>
             </ul>
           </div>
         </div>

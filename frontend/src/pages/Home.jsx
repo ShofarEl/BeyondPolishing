@@ -21,9 +21,8 @@ const Home = () => {
                 <span className="text-primary-600"> Problem Framing</span>
               </h1>
               <p className="text-lg text-gray-600 mb-6 max-w-2xl mx-auto font-primary">
-                Join our research study to explore how AI can help students develop 
-                better data science problem statements through creative collaboration 
-                and iterative refinement.
+                Participate in our research study exploring how AI can help students develop 
+                better data science problem statements. One-time session, completely anonymous.
               </p>
               
               {isAuthenticated ? (
@@ -31,25 +30,17 @@ const Home = () => {
                   to="/dashboard"
                   className="btn btn-primary text-base px-6 py-2 inline-flex items-center space-x-2"
                 >
-                  <span>Go to Dashboard</span>
+                  <span>Continue to Study</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
               ) : (
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Link
-                    to="/register"
-                    className="btn btn-primary text-base px-6 py-2 inline-flex items-center space-x-2"
-                  >
-                    <span>Join the Study</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
-                  <Link
-                    to="/login"
-                    className="btn btn-secondary text-base px-6 py-2"
-                  >
-                    Returning Participant
-                  </Link>
-                </div>
+                <Link
+                  to="/register"
+                  className="btn btn-primary text-base px-6 py-2 inline-flex items-center space-x-2"
+                >
+                  <span>Start Study Now</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
               )}
             </div>
           </div>
@@ -60,11 +51,11 @@ const Home = () => {
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 font-display">
-                How It Works
+                What You'll Do
               </h2>
               <p className="text-lg text-gray-600 max-w-xl mx-auto font-primary">
-                Our research compares two AI assistance approaches to help you 
-                frame data science problems more effectively.
+                You'll work with an AI assistant that can help you frame data science problems 
+                in two different ways. The study takes approximately 30 minutes.
               </p>
             </div>
 
@@ -78,8 +69,8 @@ const Home = () => {
                   Editor Mode
                 </h3>
                 <p className="text-gray-600 mb-3 font-primary text-sm">
-                  Refinement-focused AI that helps polish and clarify your problem statements, 
-                  suggesting specific metrics and data requirements.
+                  The AI will help you refine and clarify your problem statement, 
+                  suggesting specific metrics, data requirements, and improvements.
                 </p>
                 <div className="text-xs text-primary-600 font-medium">
                   Focus: Precision & Clarity
@@ -95,7 +86,7 @@ const Home = () => {
                   Challenger Mode
                 </h3>
                 <p className="text-gray-600 mb-3 font-primary text-sm">
-                  Creative AI that challenges your assumptions and proposes alternative 
+                  The AI will challenge your assumptions and propose alternative 
                   problem framings with different stakeholders and objectives.
                 </p>
                 <div className="text-xs text-warning-600 font-medium">
@@ -109,11 +100,11 @@ const Home = () => {
                   <BarChart3 className="w-6 h-6 text-success-600" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-3 font-display">
-                  Research Study
+                  Your Task
                 </h3>
                 <p className="text-gray-600 mb-3 font-primary text-sm">
-                  Your participation helps us understand which AI approach leads to 
-                  more creative and feasible data science problem statements.
+                  Write a data science problem statement (100-500 words), interact with 
+                  both AI modes, refine your statement, and explain your reasoning.
                 </p>
                 <div className="text-xs text-success-600 font-medium">
                   Duration: ~30 minutes
@@ -196,7 +187,7 @@ const Home = () => {
                 to="/register"
                 className="btn bg-white text-primary-600 hover:bg-gray-50 text-base px-6 py-2 inline-flex items-center space-x-2"
               >
-                <span>Join the Study Now</span>
+                <span>Start Study Now</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             )}
