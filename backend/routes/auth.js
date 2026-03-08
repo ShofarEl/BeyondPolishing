@@ -5,12 +5,28 @@ import User from '../models/User.js';
 
 const router = express.Router();
 
+// Debug middleware for auth routes
+router.use((req, res, next) => {
+  console.log(`Auth route accessed: ${req.method} ${req.path}`);
+  console.log('Request body:', req.body);
+  next();
+});
+
 // Generate JWT token
 const generateToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET, {
     expiresIn: '7d'
   });
 };
+
+// Test route to verify auth routes are mounted
+router.get('/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Auth routes are working',
+    timestamp: new Date().toISOString()
+  });
+});
 
 // Simplified registration for research participants
 router.post('/register', [

@@ -64,7 +64,9 @@ app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV 
+    environment: process.env.NODE_ENV,
+    mongoUri: process.env.MONGODB_URI ? 'configured' : 'missing',
+    jwtSecret: process.env.JWT_SECRET ? 'configured' : 'missing'
   });
 });
 
@@ -75,7 +77,13 @@ app.get('/api/health', (req, res) => {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    routes: {
+      auth: 'mounted',
+      problems: 'mounted', 
+      ai: 'mounted',
+      admin: 'mounted'
+    }
   });
 });
 
