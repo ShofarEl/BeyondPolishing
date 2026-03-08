@@ -99,14 +99,14 @@ const Register = () => {
                   <li>You are at least 18 years old</li>
                 </ul>
               </div>
-              <label className="flex items-start cursor-pointer">
+              <label className="flex items-start cursor-pointer touch-manipulation">
                 <input
                   type="checkbox"
                   checked={consent}
                   onChange={(e) => setConsent(e.target.checked)}
-                  className="mt-1 mr-3 h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                  className="mt-0.5 mr-3 h-5 w-5 min-w-[1.25rem] text-primary-600 focus:ring-primary-500 border-gray-300 rounded flex-shrink-0"
                 />
-                <span className="text-xs text-blue-900">
+                <span className="text-xs text-blue-900 leading-relaxed">
                   I consent to participate in this research study
                 </span>
               </label>
