@@ -32,15 +32,8 @@ const Register = () => {
       // Randomly assign study group
       const assignedStudyGroup = Math.random() < 0.5 ? 'editor-first' : 'challenger-first'
       
-      // Generate anonymous username
-      const timestamp = Date.now().toString().substring(-6)
-      const randomStr = Math.random().toString(36).substring(2, 5).toUpperCase()
-      const username = `Participant_${timestamp}${randomStr}`
-      
-      // Create user with minimal data
+      // Create anonymous user session
       const userData = {
-        username,
-        email: `${username}@anonymous.study`, // Dummy email for backend compatibility
         studyGroup: assignedStudyGroup,
         demographicData: {
           academicLevel: data.academicLevel,
@@ -51,16 +44,9 @@ const Register = () => {
       const result = await registerUser(userData)
       
       if (result.success) {
-        // Give consent immediately since they already consented
-        const consentResult = await useAuthStore.getState().giveConsent(result.data.participantId)
-        
-        if (consentResult.success) {
-          toast.success('Starting study...')
-          // Go directly to workspace
-          navigate('/workspace/new')
-        } else {
-          toast.error('Failed to process consent')
-        }
+        toast.success('Starting study...')
+        // Go directly to workspace
+        navigate('/workspace/new')
       } else {
         toast.error(result.error || 'Failed to start study')
       }

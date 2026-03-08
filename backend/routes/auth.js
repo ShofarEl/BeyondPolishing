@@ -15,7 +15,7 @@ router.use((req, res, next) => {
 // Generate JWT token
 const generateToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: '7d'
+    expiresIn: '24h' // Shorter session for anonymous study
   });
 };
 
@@ -28,16 +28,8 @@ router.get('/test', (req, res) => {
   });
 });
 
-// Simplified registration for research participants
+// Anonymous participant registration - no email or participant ID needed
 router.post('/register', [
-  body('username')
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Username must be between 2 and 50 characters'),
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Valid email address required'),
   body('demographicData.academicLevel')
     .isIn(['undergraduate', 'graduate', 'postgraduate', 'other'])
     .withMessage('Valid academic level required'),
@@ -58,36 +50,21 @@ router.post('/register', [
       });
     }
 
-    const { username, email, demographicData, studyGroup } = req.body;
+    const { demographicData, studyGroup } = req.body;
 
-    // For anonymous studies, check if this exact email exists (it shouldn't since we generate unique ones)
-    // But if it does, just generate a new unique email
-    let finalEmail = email;
-    let emailExists = await User.findOne({ email: finalEmail });
-    
-    if (emailExists) {
-      // Generate a truly unique email
-      finalEmail = `anon_${Date.now()}_${Math.random().toString(36).substring(2, 9)}@anonymous.study`;
-    }
+    // Generate anonymous session ID
+    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 
-    // Use the study group provided
-    const assignedStudyGroup = studyGroup;
-
-    // Generate unique participant ID
-    const participantId = `P${Date.now()}${Math.random().toString(36).substring(2, 7)}`;
-
-    // Create new user with simplified data - consent given immediately for one-time study
+    // Create anonymous user session
     const user = new User({
-      participantId,
-      email: finalEmail,
-      username,
-      studyGroup: assignedStudyGroup,
+      sessionId,
+      studyGroup,
       demographicData: {
         academicLevel: demographicData.academicLevel,
         dataScienceExperience: demographicData.dataScienceExperience
       },
-      consentGiven: false, // Will be set to true in separate consent call
-      consentTimestamp: null
+      consentGiven: true, // Immediate consent for anonymous study
+      consentTimestamp: new Date()
     });
 
     await user.save();
@@ -98,12 +75,10 @@ router.post('/register', [
     res.status(201).json({
       success: true,
       data: {
-        participantId: user.participantId,
-        username: user.username,
-        email: user.email,
+        sessionId: user.sessionId,
         studyGroup: user.studyGroup,
         token,
-        message: 'Registration successful!'
+        message: 'Anonymous session started!'
       }
     });
 
@@ -116,175 +91,36 @@ router.post('/register', [
   }
 });
 
-// Give consent
-router.post('/consent', [
-  body('participantId')
-    .trim()
-    .isLength({ min: 5 })
-    .withMessage('Valid participant ID required')
-], async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: errors.array()
-      });
-    }
-
-    const { participantId } = req.body;
-
-    const user = await User.findOne({ participantId });
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: 'Participant not found'
-      });
-    }
-
-    if (user.consentGiven) {
-      return res.status(400).json({
-        success: false,
-        error: 'Consent already given'
-      });
-    }
-
-    // Update consent
-    user.consentGiven = true;
-    user.consentTimestamp = new Date();
-    user.lastActive = new Date();
-
-    await user.save();
-
-    // Generate token
-    const token = generateToken(user._id);
-
-    res.json({
-      success: true,
-      data: {
-        participantId: user.participantId,
-        email: user.email,
-        username: user.username,
-        studyGroup: user.studyGroup,
-        token,
-        consentGiven: true
-      }
-    });
-
-  } catch (error) {
-    console.error('Consent Error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to process consent'
-    });
-  }
-});
-
-// Simplified login for returning participants
-router.post('/login', [
-  body('participantId')
-    .trim()
-    .isLength({ min: 5 })
-    .withMessage('Valid participant ID required')
-], async (req, res) => {
-  try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: errors.array()
-      });
-    }
-
-    const { participantId } = req.body;
-    
-    console.log('Login attempt for participantId:', participantId);
-
-    // First, let's see if the user exists at all
-    const userExists = await User.findOne({ participantId });
-    console.log('User exists check:', userExists ? 'YES' : 'NO');
-    if (userExists) {
-      console.log('User details:', {
-        participantId: userExists.participantId,
-        isActive: userExists.isActive,
-        consentGiven: userExists.consentGiven,
-        email: userExists.email
-      });
-    }
-
-    const user = await User.findOne({ 
-      participantId, 
-      isActive: true
-    });
-
-    if (!user) {
-      console.log('User not found with login conditions');
-      return res.status(404).json({
-        success: false,
-        error: 'Participant ID not found or account inactive'
-      });
-    }
-
-    // Update last active
-    user.lastActive = new Date();
-    await user.save();
-
-    // Generate token
-    const token = generateToken(user._id);
-
-    res.json({
-      success: true,
-      data: {
-        participantId: user.participantId,
-        username: user.username,
-        studyGroup: user.studyGroup,
-        consentGiven: user.consentGiven,
-        token
-      }
-    });
-
-  } catch (error) {
-    console.error('Login Error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Login failed'
-    });
-  }
-});
-
 // Start new session
 router.post('/session/start', async (req, res) => {
   try {
-    const { participantId } = req.body;
+    const { sessionId } = req.body;
 
-    if (!participantId) {
+    if (!sessionId) {
       return res.status(400).json({
         success: false,
-        error: 'Participant ID required'
+        error: 'Session ID required'
       });
     }
 
-    const user = await User.findOne({ participantId, isActive: true });
+    const user = await User.findOne({ sessionId, isActive: true });
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        error: 'Participant not found'
+        error: 'Session not found'
       });
     }
 
-    // Start new session
-    const sessionId = user.startNewSession();
+    // Start new task session
+    const taskSessionId = user.startNewSession();
     await user.save();
 
     res.json({
       success: true,
       data: {
-        sessionId,
-        participantId: user.participantId
+        taskSessionId,
+        sessionId: user.sessionId
       }
     });
 
@@ -300,21 +136,21 @@ router.post('/session/start', async (req, res) => {
 // End current session
 router.post('/session/end', async (req, res) => {
   try {
-    const { participantId } = req.body;
+    const { sessionId } = req.body;
 
-    if (!participantId) {
+    if (!sessionId) {
       return res.status(400).json({
         success: false,
-        error: 'Participant ID required'
+        error: 'Session ID required'
       });
     }
 
-    const user = await User.findOne({ participantId, isActive: true });
+    const user = await User.findOne({ sessionId, isActive: true });
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        error: 'Participant not found'
+        error: 'Session not found'
       });
     }
 
@@ -336,132 +172,19 @@ router.post('/session/end', async (req, res) => {
   }
 });
 
-// Withdraw from study
-router.post('/withdraw', [
-  body('participantId')
-    .trim()
-    .isLength({ min: 5 })
-    .withMessage('Valid participant ID required'),
-  body('reason')
-    .optional()
-    .trim()
-    .isLength({ max: 500 })
-    .withMessage('Reason must not exceed 500 characters')
-], async (req, res) => {
+// Get session info
+router.get('/session/:sessionId', async (req, res) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: errors.array()
-      });
-    }
+    const { sessionId } = req.params;
 
-    const { participantId, reason } = req.body;
-
-    const user = await User.findOne({ participantId });
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: 'Participant not found'
-      });
-    }
-
-    // Withdraw from study
-    user.withdrawFromStudy(reason);
-    await user.save();
-
-    res.json({
-      success: true,
-      message: 'Successfully withdrew from study'
-    });
-
-  } catch (error) {
-    console.error('Withdraw Error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to process withdrawal'
-    });
-  }
-});
-
-// Lookup participant by email
-router.post('/lookup', [
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Valid email address required')
-], async (req, res) => {
-  try {
-    console.log('Lookup request body:', req.body);
-    
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      console.log('Validation errors:', errors.array());
-      return res.status(400).json({
-        success: false,
-        error: 'Validation failed',
-        details: errors.array()
-      });
-    }
-
-    const { email } = req.body;
-    console.log('Looking up email:', email);
-
-    const user = await User.findOne({ email, isActive: true }).select(
-      'participantId email username studyGroup consentGiven'
+    const user = await User.findOne({ sessionId }).select(
+      'sessionId studyGroup consentGiven isActive lastActive'
     );
 
     if (!user) {
       return res.status(404).json({
         success: false,
-        error: 'No account found with this email address'
-      });
-    }
-
-    res.json({
-      success: true,
-      data: {
-        participantId: user.participantId,
-        email: user.email,
-        username: user.username,
-        studyGroup: user.studyGroup,
-        consentGiven: user.consentGiven,
-        message: 'Account found! Use your Participant ID to log in.'
-      }
-    });
-
-  } catch (error) {
-    console.error('Lookup Error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Failed to lookup account'
-    });
-  }
-});
-
-// Get participant info (for returning users)
-router.get('/info', async (req, res) => {
-  try {
-    const { participantId } = req.query;
-
-    if (!participantId) {
-      return res.status(400).json({
-        success: false,
-        error: 'Participant ID required'
-      });
-    }
-
-    const user = await User.findOne({ participantId }).select(
-      'participantId studyGroup consentGiven isActive lastActive withdrewFromStudy'
-    );
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: 'Participant not found'
+        error: 'Session not found'
       });
     }
 
@@ -471,10 +194,10 @@ router.get('/info', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get Info Error:', error);
+    console.error('Get Session Info Error:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch participant info'
+      error: 'Failed to fetch session info'
     });
   }
 });

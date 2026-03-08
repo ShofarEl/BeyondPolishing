@@ -26,9 +26,8 @@ const requireAdmin = (req, res, next) => {
 router.get('/stats', requireAdmin, async (req, res) => {
   try {
     const [
-      totalParticipants,
-      activeParticipants,
-      withdrawnParticipants,
+      totalSessions,
+      activeSessions,
       totalProblems,
       completedProblems,
       abandonedProblems,
@@ -36,7 +35,6 @@ router.get('/stats', requireAdmin, async (req, res) => {
     ] = await Promise.all([
       User.countDocuments(),
       User.countDocuments({ isActive: true }),
-      User.countDocuments({ withdrewFromStudy: true }),
       Problem.countDocuments(),
       Problem.countDocuments({ status: 'completed' }),
       Problem.countDocuments({ status: 'abandoned' }),
@@ -78,10 +76,9 @@ router.get('/stats', requireAdmin, async (req, res) => {
     res.json({
       success: true,
       data: {
-        participants: {
-          total: totalParticipants,
-          active: activeParticipants,
-          withdrawn: withdrawnParticipants,
+        sessions: {
+          total: totalSessions,
+          active: activeSessions,
           studyGroupDistribution
         },
         problems: {
@@ -112,18 +109,15 @@ router.get('/export', requireAdmin, async (req, res) => {
   try {
     const { format = 'json' } = req.query;
 
-    // Get all users (anonymized)
-    const users = await User.find({}, {
-      participantId: 1,
+    // Get all anonymous sessions
+    const sessions = await User.find({}, {
+      sessionId: 1,
       studyGroup: 1,
       consentGiven: 1,
       consentTimestamp: 1,
       demographicData: 1,
-      recruitmentSource: 1,
       sessions: 1,
       isActive: 1,
-      withdrewFromStudy: 1,
-      withdrawalReason: 1,
       createdAt: 1,
       updatedAt: 1
     });
@@ -150,10 +144,10 @@ router.get('/export', requireAdmin, async (req, res) => {
 
     const exportData = {
       exportTimestamp: new Date().toISOString(),
-      users,
+      sessions,
       problems,
       metadata: {
-        totalUsers: users.length,
+        totalSessions: sessions.length,
         totalProblems: problems.length,
         totalInteractions: problems.reduce((sum, p) => sum + p.interactions.length, 0)
       }
@@ -165,7 +159,7 @@ router.get('/export', requireAdmin, async (req, res) => {
       res.setHeader('Content-Disposition', 'attachment; filename="research_data.csv"');
       
       // Basic CSV export for problems
-      const csvHeader = 'problemId,userId,taskCategory,status,totalTimeSpent,interactionCount\n';
+      const csvHeader = 'problemId,sessionId,taskCategory,status,totalTimeSpent,interactionCount\n';
       const csvData = problems.map(p => 
         `${p.problemId},${p.userId},${p.taskCategory},${p.status},${p.totalTimeSpent},${p.interactions.length}`
       ).join('\n');
@@ -263,17 +257,17 @@ router.put('/problems/:problemId/evaluate', requireAdmin, [
   }
 });
 
-// Get participants list
-router.get('/participants', requireAdmin, async (req, res) => {
+// Get sessions list
+router.get('/sessions', requireAdmin, async (req, res) => {
   try {
     const { page = 1, limit = 50, status } = req.query;
 
     const filter = {};
     if (status === 'active') filter.isActive = true;
-    if (status === 'withdrawn') filter.withdrewFromStudy = true;
+    if (status === 'inactive') filter.isActive = false;
 
-    const participants = await User.find(filter)
-      .select('participantId studyGroup consentGiven demographicData recruitmentSource isActive withdrewFromStudy createdAt lastActive')
+    const sessions = await User.find(filter)
+      .select('sessionId studyGroup consentGiven demographicData isActive createdAt lastActive')
       .sort({ createdAt: -1 })
       .limit(parseInt(limit))
       .skip((parseInt(page) - 1) * parseInt(limit));
@@ -283,7 +277,7 @@ router.get('/participants', requireAdmin, async (req, res) => {
     res.json({
       success: true,
       data: {
-        participants,
+        sessions,
         pagination: {
           page: parseInt(page),
           limit: parseInt(limit),
@@ -294,10 +288,10 @@ router.get('/participants', requireAdmin, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Get Participants Error:', error);
+    console.error('Get Sessions Error:', error);
     res.status(500).json({
       success: false,
-      error: 'Failed to fetch participants'
+      error: 'Failed to fetch sessions'
     });
   }
 });

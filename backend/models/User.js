@@ -1,42 +1,23 @@
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 
 const userSchema = new mongoose.Schema({
-  // Research participant ID (anonymized)
-  participantId: {
+  // Anonymous session ID (no personal identifiers)
+  sessionId: {
     type: String,
     required: true,
     unique: true,
     index: true
   },
   
-  // User contact info
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    index: true,
-    lowercase: true,
-    trim: true
-  },
-  
-  username: {
-    type: String,
-    required: true,
-    trim: true,
-    minlength: 2,
-    maxlength: 50
-  },
-  
-  // Basic info (for research tracking only)
+  // Study group assignment
   studyGroup: {
     type: String,
     enum: ['editor-first', 'challenger-first'],
     required: true
   },
   
-  // Consent and participation
+  // Consent (given immediately for anonymous study)
   consentGiven: {
     type: Boolean,
     default: true,
@@ -48,7 +29,7 @@ const userSchema = new mongoose.Schema({
     default: Date.now
   },
   
-  // Session tracking
+  // Task session tracking
   sessions: [{
     sessionId: String,
     startTime: Date,
@@ -57,7 +38,7 @@ const userSchema = new mongoose.Schema({
     totalTimeSpent: Number // in minutes
   }],
   
-  // Research metadata
+  // Research metadata (anonymous demographics)
   demographicData: {
     academicLevel: {
       type: String,
@@ -71,26 +52,21 @@ const userSchema = new mongoose.Schema({
     }
   },
   
-  // Account management
+  // Session management
   isActive: {
     type: Boolean,
     default: true
   },
-  lastActive: Date,
-  
-  // Withdrawal tracking
-  withdrewFromStudy: {
-    type: Boolean,
-    default: false
-  },
-  withdrawalReason: String,
-  withdrawalTimestamp: Date
+  lastActive: {
+    type: Date,
+    default: Date.now
+  }
 }, {
   timestamps: true
 });
 
 // Index for efficient queries
-userSchema.index({ participantId: 1, isActive: 1 });
+userSchema.index({ sessionId: 1, isActive: 1 });
 
 // Virtual for current session
 userSchema.virtual('currentSession').get(function() {
@@ -123,13 +99,6 @@ userSchema.methods.incrementTasksCompleted = function() {
   if (currentSession) {
     currentSession.tasksCompleted += 1;
   }
-};
-
-userSchema.methods.withdrawFromStudy = function(reason = '') {
-  this.withdrewFromStudy = true;
-  this.withdrawalReason = reason;
-  this.withdrawalTimestamp = new Date();
-  this.isActive = false;
 };
 
 export default mongoose.model('User', userSchema);

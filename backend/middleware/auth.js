@@ -31,11 +31,9 @@ const authenticateUser = async (req, res, next) => {
     if (!user.isActive) {
       return res.status(401).json({
         success: false,
-        error: 'Account is inactive.'
+        error: 'Session is inactive.'
       });
     }
-
-    // Consent is no longer required for authenticated access
 
     // Add user to request object
     req.user = user;
