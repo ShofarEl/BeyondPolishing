@@ -2,14 +2,15 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, GraduationCap, Database, AlertCircle, Shield, CheckCircle } from 'lucide-react'
+import useAuthStore from '../store/authStore'
 import LoadingSpinner from '../components/LoadingSpinner'
 import toast from 'react-hot-toast'
-import api from '../services/api'
 
 const Register = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [consent, setConsent] = useState(false)
   const navigate = useNavigate()
+  const { register: registerUser } = useAuthStore()
 
   const {
     register,
@@ -28,34 +29,40 @@ const Register = () => {
 
     setIsLoading(true)
     try {
-      // Generate anonymous participant ID
-      const participantId = `P${Date.now()}${Math.random().toString(36).substring(2, 7).toUpperCase()}`
+      // Randomly assign study group
+      const assignedStudyGroup = Math.random() < 0.5 ? 'editor-first' : 'challenger-first'
+      
+      // Generate anonymous username
+      const timestamp = Date.now().toString().substring(-6)
+      const randomStr = Math.random().toString(36).substring(2, 5).toUpperCase()
+      const username = `Participant_${timestamp}${randomStr}`
       
       // Create user with minimal data
       const userData = {
-        participantId,
-        username: `Participant_${participantId.substring(1, 8)}`, // Auto-generate username
-        email: `${participantId}@anonymous.study`, // Dummy email for backend compatibility
-        studyGroup: data.studyGroup,
+        username,
+        email: `${username}@anonymous.study`, // Dummy email for backend compatibility
+        studyGroup: assignedStudyGroup,
         demographicData: {
           academicLevel: data.academicLevel,
           dataScienceExperience: data.dataScienceExperience
         }
       }
 
-      const response = await api.post('/auth/register', userData)
+      const result = await registerUser(userData)
       
-      if (response.data.success) {
-        // Store session data
-        localStorage.setItem('authToken', response.data.data.token)
-        localStorage.setItem('participantId', participantId)
-        localStorage.setItem('studyGroup', data.studyGroup)
+      if (result.success) {
+        // Give consent immediately since they already consented
+        const consentResult = await useAuthStore.getState().giveConsent(result.data.participantId)
         
-        toast.success('Starting study...')
-        // Go directly to workspace
-        navigate('/workspace/new')
+        if (consentResult.success) {
+          toast.success('Starting study...')
+          // Go directly to workspace
+          navigate('/workspace/new')
+        } else {
+          toast.error('Failed to process consent')
+        }
       } else {
-        toast.error(response.data.error || 'Failed to start study')
+        toast.error(result.error || 'Failed to start study')
       }
     } catch (error) {
       console.error('Registration error:', error)
@@ -125,7 +132,6 @@ const Register = () => {
               <input
                 type="hidden"
                 {...register('studyGroup')}
-                value={Math.random() < 0.5 ? 'editor-first' : 'challenger-first'}
               />
 
               {/* Academic Level */}

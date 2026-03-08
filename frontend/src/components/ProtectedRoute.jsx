@@ -16,10 +16,10 @@ const ProtectedRoute = ({ children, requireConsent = false }) => {
     )
   }
 
-  // If not authenticated, redirect to login
+  // If not authenticated, redirect to register (start study)
   if (!isAuthenticated) {
-    console.log('ProtectedRoute: not authenticated, redirecting to login')
-    return <Navigate to="/login" replace />
+    console.log('ProtectedRoute: not authenticated, redirecting to register')
+    return <Navigate to="/register" replace />
   }
 
   // If consent is required but not given, redirect to consent page

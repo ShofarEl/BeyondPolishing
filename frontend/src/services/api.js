@@ -52,7 +52,7 @@ api.interceptors.response.use(
     if (response?.status === 401) {
       // Token expired or invalid
       useAuthStore.getState().logout()
-      window.location.href = '/login'
+      window.location.href = '/register'
     }
     
     // Note: Do not auto-redirect on 403 here. Let route guards control navigation.

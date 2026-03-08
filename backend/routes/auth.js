@@ -53,13 +53,13 @@ router.post('/register', [
       });
     }
 
-    // Use the study group selected by the user
+    // Use the study group provided
     const assignedStudyGroup = studyGroup;
 
     // Generate unique participant ID
     const participantId = `P${Date.now()}${Math.random().toString(36).substring(2, 7)}`;
 
-    // Create new user with simplified data
+    // Create new user with simplified data - consent given immediately for one-time study
     const user = new User({
       participantId,
       email,
@@ -69,8 +69,8 @@ router.post('/register', [
         academicLevel: demographicData.academicLevel,
         dataScienceExperience: demographicData.dataScienceExperience
       },
-      consentGiven: true, // Consent given during registration
-      consentTimestamp: new Date()
+      consentGiven: false, // Will be set to true in separate consent call
+      consentTimestamp: null
     });
 
     await user.save();
@@ -83,9 +83,10 @@ router.post('/register', [
       data: {
         participantId: user.participantId,
         username: user.username,
+        email: user.email,
         studyGroup: user.studyGroup,
         token,
-        message: 'Registration successful! Save your Participant ID for future logins.'
+        message: 'Registration successful!'
       }
     });
 
