@@ -10,14 +10,14 @@ class AIService {
     console.log('OpenAI API Key length:', process.env.OPENAI_API_KEY?.length);
     
     if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY environment variable is not set');
+      console.warn('⚠️ OPENAI_API_KEY environment variable is not set - AI features will be disabled');
+      this.openai = null;
+    } else {
+      this.openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY
+      });
+      console.log('OpenAI client initialized successfully');
     }
-    
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
-    
-    console.log('OpenAI client initialized successfully');
     
     // Initialize prompt templates
     this.initializePromptTemplates();
@@ -77,6 +77,10 @@ Propose alternative problem framings that explore different stakeholders, object
         problemStatementLength: problemStatement?.length,
         hasUserInput: !!userInput
       });
+
+      if (!this.openai) {
+        throw new Error('AI service is not available - OPENAI_API_KEY not configured');
+      }
 
       const promptTemplate = this.prompts[promptType];
       if (!promptTemplate) {
