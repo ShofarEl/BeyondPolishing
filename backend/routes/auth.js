@@ -84,9 +84,13 @@ router.post('/register', [
 
   } catch (error) {
     console.error('Registration Error:', error);
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
     res.status(500).json({
       success: false,
-      error: 'Registration failed'
+      error: 'Registration failed',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 });

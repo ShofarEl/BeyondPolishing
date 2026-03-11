@@ -19,6 +19,8 @@ services:
         generateValue: true
       - key: OPENAI_API_KEY
         sync: false
+      - key: GEMINI_API_KEY
+        sync: false
       - key: FRONTEND_URL
         value: https://beyond-polishing.vercel.app
       - key: RATE_LIMIT_WINDOW_MS
