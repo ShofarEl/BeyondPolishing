@@ -36,9 +36,11 @@ const ProblemWorkspace = () => {
     isLoading: aiLoading 
   } = useAIStore()
 
-  // Debug current response
-  console.log('ProblemWorkspace - currentResponse:', currentResponse)
-  console.log('ProblemWorkspace - problem interactions:', problem?.interactions?.length)
+  // Debug current response (only in development)
+  if (process.env.NODE_ENV === 'development') {
+    console.log('ProblemWorkspace - currentResponse:', currentResponse)
+    console.log('ProblemWorkspace - problem interactions:', problem?.interactions?.length)
+  }
 
   const studyGroup = getStudyGroup()
   const isEditorFirst = studyGroup === 'editor-first'
@@ -74,11 +76,13 @@ const ProblemWorkspace = () => {
     setSelectedPromptType(promptType)
     
     try {
-      console.log('Generating AI response with:', {
-        problemStatement: currentProblem.substring(0, 50) + '...',
-        promptType,
-        problemId: problem?.problemId
-      })
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Generating AI response with:', {
+          problemStatement: currentProblem.substring(0, 50) + '...',
+          promptType,
+          problemId: problem?.problemId
+        })
+      }
 
       const result = await generateResponse({
         problemStatement: currentProblem,
@@ -285,9 +289,12 @@ const ProblemWorkspace = () => {
                   Problem Statement
                 </h2>
                 <p className="text-sm text-gray-600">
-                  Describe your data science problem. Be as specific as possible about objectives, 
+                  Describe your data science problem in your chosen domain. Be as specific as possible about objectives, 
                   data sources, and success metrics.
                 </p>
+                <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
+                  <strong>Study Task:</strong> You will complete TWO problem framing tasks. Choose any domain (healthcare, finance, education, etc.) and work with AI assistance to refine your problem statements.
+                </div>
                 <div className="mt-2 text-xs text-gray-500 space-y-1">
                   <p><strong>Expected:</strong> 100-500 words describing a data science problem</p>
                   <p><strong>Include:</strong> Clear objective, stakeholders, data sources, and success metrics</p>
@@ -330,10 +337,10 @@ const ProblemWorkspace = () => {
                       AI Assistant
                     </h3>
                     <p className="text-sm text-gray-600">
-                      The AI will help you refine your problem statement. You'll interact with both modes during this study.
+                      The AI will help you refine your problem statement. You'll interact with both Editor and Challenger modes during this study.
                     </p>
                     <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-xs text-blue-800">
-                      <strong>Note:</strong> You'll use both Editor and Challenger modes. The system will suggest which mode to use next to ensure balanced data collection.
+                      <strong>Study Requirement:</strong> Complete TWO tasks total. You'll use both Editor and Challenger modes for each task to ensure balanced data collection.
                     </div>
                   </div>
                   <div className="card-body space-y-4">

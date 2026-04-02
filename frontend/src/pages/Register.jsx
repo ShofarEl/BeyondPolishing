@@ -206,8 +206,9 @@ const Register = () => {
             </h3>
             <ul className="text-sm text-gray-600 space-y-2">
               <li>• <strong>Duration:</strong> Approximately 30 minutes (one-time session)</li>
-              <li>• <strong>Task:</strong> Write a data science problem statement with AI assistance</li>
-              <li>• <strong>AI Modes:</strong> You'll interact with both Editor and Challenger AI modes</li>
+              <li>• <strong>Tasks:</strong> Complete TWO data science problem framing tasks in your chosen domain</li>
+              <li>• <strong>AI Modes:</strong> You'll interact with both Editor and Challenger AI modes for each task</li>
+              <li>• <strong>Domain Choice:</strong> Select any domain (healthcare, finance, education, etc.) for your problems</li>
               <li>• <strong>Data Collected:</strong> Your problem statements, AI interactions, and ratings</li>
               <li>• <strong>Privacy:</strong> Completely anonymous - no personal information collected</li>
               <li>• <strong>No Login:</strong> This is a one-time session - no account or email needed</li>

@@ -3,15 +3,6 @@ import { Clock, CheckCircle, AlertCircle, Play, Eye } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 const TaskCard = ({ problem }) => {
-  // Add debugging to see what data we're getting
-  console.log('TaskCard problem data:', {
-    problemId: problem.problemId,
-    status: problem.status,
-    totalTimeSpent: problem.totalTimeSpent,
-    interactionsLength: problem.interactions ? problem.interactions.length : 'no interactions',
-    startTime: problem.startTime,
-    taskCategory: problem.taskCategory
-  })
   const getStatusIcon = (status) => {
     switch (status) {
       case 'completed':

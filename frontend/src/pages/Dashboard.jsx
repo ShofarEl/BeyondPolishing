@@ -10,29 +10,15 @@ import ProgressChart from '../components/ProgressChart'
 import toast from 'react-hot-toast'
 
 const Dashboard = () => {
-  console.log('Dashboard component starting to render')
-  
   const [selectedCategory, setSelectedCategory] = useState('all')
   
-  console.log('Dashboard - getting auth store')
   const { user, getStudyGroup } = useAuthStore()
-  console.log('Dashboard - auth store successful, user:', user)
-  
-  console.log('Dashboard - getting problem store')
   const { problems, fetchProblems, isLoading } = useProblemStore()
-  console.log('Dashboard - problem store successful, problems:', problems)
-  
-  console.log('Dashboard - getting AI store')
   const { getResponseStats } = useAIStore()
-  console.log('Dashboard - AI store successful')
-  
-  console.log('Dashboard render - user:', user, 'problems:', problems.length, 'isLoading:', isLoading)
 
   let studyGroup, stats
   try {
-    console.log('Dashboard - calling getStudyGroup')
     studyGroup = getStudyGroup()
-    console.log('Dashboard - getStudyGroup successful:', studyGroup)
     
     // Calculate AI interaction stats from problems data instead of AI store
     const allInteractions = problems.flatMap(problem => problem.interactions || [])
@@ -45,7 +31,6 @@ const Dashboard = () => {
       editorCount,
       challengerCount
     }
-    console.log('Dashboard - calculated stats from problems:', stats)
   } catch (error) {
     console.error('Dashboard - error getting studyGroup or stats:', error)
     studyGroup = 'editor-first'
@@ -53,11 +38,9 @@ const Dashboard = () => {
   }
 
   useEffect(() => {
-    console.log('Dashboard useEffect - starting')
     try {
-      console.log('Dashboard useEffect - calling fetchProblems')
       fetchProblems().then(result => {
-        console.log('fetchProblems result:', result)
+        // Data fetched successfully
       }).catch(error => {
         console.error('fetchProblems error:', error)
       })
@@ -69,13 +52,11 @@ const Dashboard = () => {
   // Refresh data when user returns to dashboard (e.g., from workspace)
   useEffect(() => {
     const handleFocus = () => {
-      console.log('Dashboard - window focused, refreshing data')
       fetchProblems()
     }
 
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        console.log('Dashboard - page visible, refreshing data')
         fetchProblems()
       }
     }
@@ -102,18 +83,6 @@ const Dashboard = () => {
   const filteredProblems = problems.filter(problem => {
     if (selectedCategory === 'all') return true
     return problem.status === selectedCategory
-  })
-
-  console.log('Dashboard filtering:', {
-    selectedCategory,
-    totalProblems: problems.length,
-    filteredProblems: filteredProblems.length,
-    problemStatuses: problems.map(p => p.status),
-    problemsWithInteractions: problems.map(p => ({
-      id: p.problemId,
-      interactions: p.interactions ? p.interactions.length : 0,
-      totalTimeSpent: p.totalTimeSpent
-    }))
   })
 
   const taskCategories = [
@@ -165,6 +134,25 @@ const Dashboard = () => {
               <p className="text-base lg:text-lg text-gray-600 font-primary">
                 Continue working on your data science problem framing tasks
               </p>
+              
+              {/* Task Progress Indicator */}
+              <div className="mt-3">
+                {problems.filter(p => p.status === 'completed').length >= 2 ? (
+                  <div className="inline-flex items-center px-4 py-2 bg-green-50 border border-green-200 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+                    <span className="text-sm font-medium text-green-800">
+                      Study Complete! Both tasks finished ({problems.filter(p => p.status === 'completed').length}/2)
+                    </span>
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+                    <Clock className="w-5 h-5 text-blue-600 mr-2" />
+                    <span className="text-sm font-medium text-blue-800">
+                      Study Progress: {problems.filter(p => p.status === 'completed').length} of 2 tasks completed
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
             
             {/* Participant ID Display */}
@@ -210,6 +198,33 @@ const Dashboard = () => {
             </span>
           </div>
         </div>
+
+        {/* Completion Celebration */}
+        {problems.filter(p => p.status === 'completed').length >= 2 && (
+          <div className="mb-8 card bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+            <div className="card-body text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="w-8 h-8 text-green-600" />
+              </div>
+              <h2 className="text-2xl font-bold text-green-900 mb-2">
+                Study Complete! 🎉
+              </h2>
+              <p className="text-green-800 mb-4">
+                Thank you for completing both problem framing tasks. Your participation helps advance research in AI-assisted problem solving.
+              </p>
+              <div className="flex items-center justify-center space-x-6 text-sm text-green-700">
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-4 h-4" />
+                  <span>Task 1: Completed</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <CheckCircle className="w-4 h-4" />
+                  <span>Task 2: Completed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4 lg:gap-6 mb-8">
@@ -271,13 +286,26 @@ const Dashboard = () => {
         {/* Quick Actions */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              to="/workspace/new"
-              className="btn btn-primary flex items-center space-x-2"
-            >
-              <Plus className="w-5 h-5" />
-              <span>Start New Task</span>
-            </Link>
+            {problems.filter(p => p.status === 'completed').length < 2 ? (
+              <Link
+                to="/workspace/new"
+                className="btn btn-primary flex items-center space-x-2"
+              >
+                <Plus className="w-5 h-5" />
+                <span>
+                  {problems.length === 0 ? 'Start First Task' : 
+                   problems.filter(p => p.status === 'completed').length === 0 ? 'Start First Task' :
+                   'Start Second Task'}
+                </span>
+              </Link>
+            ) : (
+              <div className="inline-flex items-center px-4 py-2 bg-green-50 border border-green-200 rounded-lg">
+                <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+                <span className="text-sm font-medium text-green-800">
+                  Study completed! Thank you for participating.
+                </span>
+              </div>
+            )}
             
             <div className="flex space-x-2">
               <button
@@ -416,14 +444,13 @@ const Dashboard = () => {
               <BarChart3 className="w-12 h-12 text-gray-400" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {selectedCategory === 'all' ? 'No tasks yet' : `No ${selectedCategory} tasks`}
+              {selectedCategory === 'all' ? 'Ready to start your study tasks' : `No ${selectedCategory} tasks`}
             </h3>
             <p className="text-gray-600 mb-6">
               {selectedCategory === 'all' 
-                ? 'Start your first data science problem framing task'
+                ? 'Complete TWO data science problem framing tasks with AI assistance'
                 : `You don't have any ${selectedCategory} tasks yet`
-              }
-            </p>
+              }</p>
             {selectedCategory === 'all' && (
               <Link to="/workspace/new" className="btn btn-primary">
                 Start Your First Task
