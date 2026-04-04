@@ -127,10 +127,52 @@ const ProblemWorkspace = () => {
         // Refresh problem data to get the latest interactions
         if (problem?.problemId) {
           await loadProblem()
+          
+          // Check if both tasks are now complete after refresh
+          setTimeout(() => {
+            const updatedStatus = getCompletionStatus()
+            if (updatedStatus.editorDone && updatedStatus.challengerDone && updatedStatus.totalInteractions === 2) {
+              // Both tasks completed for the first time
+              toast.success('🎊 Congratulations! Both Editor and Challenger tasks completed!', {
+                duration: 5000,
+                style: {
+                  background: '#059669',
+                  color: 'white',
+                  fontWeight: 'bold'
+                }
+              })
+            }
+          }, 500) // Small delay to ensure state is updated
         }
         // Don't automatically show rating modal
         setUserInput('')
-        toast.success('AI response generated!')
+        
+        // Check if this is the first time completing this prompt type
+        const currentInteractions = problem?.interactions || []
+        const hasUsedThisType = currentInteractions.some(i => i.promptType === promptType)
+        
+        if (!hasUsedThisType) {
+          // This is their first time using this prompt type
+          if (promptType === 'editor') {
+            toast.success('🎉 Editor Task Complete! Great job refining your problem statement.', {
+              duration: 4000,
+              style: {
+                background: '#10B981',
+                color: 'white',
+              }
+            })
+          } else if (promptType === 'challenger') {
+            toast.success('🎉 Challenger Task Complete! Excellent creative reframing.', {
+              duration: 4000,
+              style: {
+                background: '#10B981',
+                color: 'white',
+              }
+            })
+          }
+        } else {
+          toast.success('AI response generated!')
+        }
       } else {
         toast.error(result.error || 'Failed to generate AI response')
       }
@@ -280,6 +322,23 @@ const ProblemWorkspace = () => {
 
   const nextPromptType = getPromptTypeForNextInteraction()
 
+  // Helper functions to check completion status
+  const getCompletionStatus = () => {
+    if (!problem || !problem.interactions) return { editorDone: false, challengerDone: false }
+    
+    const editorInteractions = problem.interactions.filter(i => i.promptType === 'editor')
+    const challengerInteractions = problem.interactions.filter(i => i.promptType === 'challenger')
+    
+    return {
+      editorDone: editorInteractions.length > 0,
+      challengerDone: challengerInteractions.length > 0,
+      totalInteractions: problem.interactions.length
+    }
+  }
+
+  const completionStatus = getCompletionStatus()
+  const tasksCompleted = (completionStatus.editorDone ? 1 : 0) + (completionStatus.challengerDone ? 1 : 0)
+
   if (problemLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -335,6 +394,73 @@ const ProblemWorkspace = () => {
           </div>
         </div>
       </div>
+
+      {/* Progress Indicator */}
+      {problem && problem.interactions && problem.interactions.length > 0 && (
+        <div className="bg-gradient-to-r from-blue-50 to-green-50 border-b border-blue-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 sm:py-3">
+            {/* Mobile Layout */}
+            <div className="sm:hidden">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-gray-900">Progress:</span>
+                <div className="flex items-center space-x-2">
+                  <div className={`w-3 h-3 rounded-full transition-all duration-500 ${completionStatus.editorDone ? 'bg-green-500 scale-110' : 'bg-gray-300'}`} />
+                  <div className={`w-3 h-3 rounded-full transition-all duration-500 ${completionStatus.challengerDone ? 'bg-green-500 scale-110' : 'bg-gray-300'}`} />
+                  <span className="text-sm text-gray-600 ml-2">{tasksCompleted}/2</span>
+                  {tasksCompleted === 2 && <span className="text-green-600">🎉</span>}
+                </div>
+              </div>
+            </div>
+            
+            {/* Desktop Layout */}
+            <div className="hidden sm:flex items-center justify-between">
+              <div className="flex items-center space-x-4">
+                <h3 className="text-sm font-medium text-gray-900">Study Progress:</h3>
+                <div className="flex items-center space-x-3">
+                  {/* Editor Status */}
+                  <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm transition-all duration-500 ${
+                    completionStatus.editorDone 
+                      ? 'bg-green-100 text-green-800 scale-105' 
+                      : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                      completionStatus.editorDone ? 'bg-green-500' : 'bg-gray-400'
+                    }`} />
+                    <span>Editor {completionStatus.editorDone ? 'Done' : 'Pending'}</span>
+                    {completionStatus.editorDone && <span className="text-green-600 animate-pulse">✓</span>}
+                  </div>
+                  
+                  {/* Challenger Status */}
+                  <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm transition-all duration-500 ${
+                    completionStatus.challengerDone 
+                      ? 'bg-green-100 text-green-800 scale-105' 
+                      : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    <div className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                      completionStatus.challengerDone ? 'bg-green-500' : 'bg-gray-400'
+                    }`} />
+                    <span>Challenger {completionStatus.challengerDone ? 'Done' : 'Pending'}</span>
+                    {completionStatus.challengerDone && <span className="text-green-600 animate-pulse">✓</span>}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Overall Progress */}
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-600">
+                  {tasksCompleted}/2 Tasks Complete
+                </span>
+                {tasksCompleted === 2 && (
+                  <div className="flex items-center space-x-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                    <span>🎉</span>
+                    <span>All Done!</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 lg:py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-8">
