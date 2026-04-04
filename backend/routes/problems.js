@@ -17,35 +17,15 @@ const validateProblemCreation = [
     .withMessage('Valid task category required'),
   body('initialProblem')
     .trim()
-    .isLength({ min: 10, max: 2000 })
-    .withMessage('Initial problem statement must be between 10 and 2000 characters')
-    .custom((value) => {
-      const wordCount = value.trim().split(/\s+/).filter(word => word.length > 0).length;
-      if (wordCount < 100) {
-        throw new Error('Problem statement must be at least 100 words');
-      }
-      if (wordCount > 500) {
-        throw new Error('Problem statement should not exceed 500 words');
-      }
-      return true;
-    })
+    .isLength({ min: 50, max: 2000 })
+    .withMessage('Initial problem statement must be between 50 and 2000 characters')
 ];
 
 const validateProblemCompletion = [
   body('finalProblem')
     .trim()
-    .isLength({ min: 10, max: 2000 })
-    .withMessage('Final problem statement must be between 10 and 2000 characters')
-    .custom((value) => {
-      const wordCount = value.trim().split(/\s+/).filter(word => word.length > 0).length;
-      if (wordCount < 100) {
-        throw new Error('Final problem statement must be at least 100 words');
-      }
-      if (wordCount > 500) {
-        throw new Error('Final problem statement should not exceed 500 words');
-      }
-      return true;
-    }),
+    .isLength({ min: 50, max: 2000 })
+    .withMessage('Final problem statement must be between 50 and 2000 characters'),
   body('reasoning')
     .trim()
     .isLength({ min: 20, max: 3000 })
@@ -186,20 +166,8 @@ router.put('/:problemId', authenticateUser, [
   body('currentProblem')
     .optional()
     .trim()
-    .isLength({ max: 2000 })
-    .withMessage('Current problem statement must not exceed 2000 characters')
-    .custom((value) => {
-      if (value && value.trim()) {
-        const wordCount = value.trim().split(/\s+/).filter(word => word.length > 0).length;
-        if (wordCount < 100) {
-          throw new Error('Problem statement must be at least 100 words');
-        }
-        if (wordCount > 500) {
-          throw new Error('Problem statement should not exceed 500 words');
-        }
-      }
-      return true;
-    })
+    .isLength({ min: 50, max: 2000 })
+    .withMessage('Current problem statement must be between 50 and 2000 characters')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);

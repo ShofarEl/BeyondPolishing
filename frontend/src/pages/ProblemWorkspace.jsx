@@ -25,11 +25,11 @@ const ProblemWorkspace = () => {
     return text.trim().split(/\s+/).filter(word => word.length > 0).length
   }
 
-  // Get word count and validation status
-  const currentWordCount = countWords(currentProblem)
-  const isWordCountValid = currentWordCount >= 100 && currentWordCount <= 500
-  const isWordCountTooLow = currentWordCount > 0 && currentWordCount < 100
-  const isWordCountTooHigh = currentWordCount > 500
+  // Get character count and validation status
+  const currentCharCount = currentProblem.trim().length
+  const isCharCountValid = currentCharCount >= 50 && currentCharCount <= 2000
+  const isCharCountTooLow = currentCharCount > 0 && currentCharCount < 50
+  const isCharCountTooHigh = currentCharCount > 2000
 
   const { user, getStudyGroup } = useAuthStore()
   const { 
@@ -91,10 +91,10 @@ const ProblemWorkspace = () => {
       return
     }
 
-    // Word count validation before AI interaction
-    const wordCount = countWords(currentProblem.trim())
-    if (wordCount < 100) {
-      toast.error('Please write at least 100 words before requesting AI feedback')
+    // Character count validation before AI interaction
+    const charCount = currentProblem.trim().length
+    if (charCount < 50) {
+      toast.error('Please write at least 50 characters before requesting AI feedback')
       return
     }
 
@@ -195,14 +195,14 @@ const ProblemWorkspace = () => {
       return
     }
     
-    // Word count validation
-    const wordCount = countWords(trimmed)
-    if (wordCount < 100) {
-      toast.error('Problem statement must be at least 100 words')
+    // Character count validation
+    const charCount = trimmed.length
+    if (charCount < 50) {
+      toast.error('Problem statement must be at least 50 characters')
       return
     }
-    if (wordCount > 500) {
-      toast.error('Problem statement should not exceed 500 words')
+    if (charCount > 2000) {
+      toast.error('Problem statement should not exceed 2000 characters')
       return
     }
 
@@ -256,14 +256,14 @@ const ProblemWorkspace = () => {
       return
     }
     
-    // Word count validation for final problem
-    const wordCount = countWords(finalTrimmed)
-    if (wordCount < 100) {
-      toast.error('Final problem statement must be at least 100 words')
+    // Character count validation for final problem
+    const charCount = finalTrimmed.length
+    if (charCount < 50) {
+      toast.error('Final problem statement must be at least 50 characters')
       return
     }
-    if (wordCount > 500) {
-      toast.error('Final problem statement should not exceed 500 words')
+    if (charCount > 2000) {
+      toast.error('Final problem statement should not exceed 2000 characters')
       return
     }
     
@@ -381,11 +381,11 @@ const ProblemWorkspace = () => {
               
               <button
                 onClick={() => setShowCompletionModal(true)}
-                disabled={isWordCountTooLow || !currentProblem.trim()}
+                disabled={isCharCountTooLow || !currentProblem.trim()}
                 className={`btn btn-primary flex items-center space-x-2 text-sm ${
-                  isWordCountTooLow ? 'opacity-50 cursor-not-allowed' : ''
+                  isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
-                title={isWordCountTooLow ? 'Write at least 100 words before completing' : ''}
+                title={isCharCountTooLow ? 'Write at least 50 characters before completing' : ''}
               >
                 <CheckCircle className="w-4 h-4" />
                 <span className="hidden sm:inline">Complete</span>
@@ -480,7 +480,7 @@ const ProblemWorkspace = () => {
                   <strong>Seed Problem:</strong> "Predict down usage to scale router upgrade" - Use AI assistance to develop this into a comprehensive data science problem statement.
                 </div>
                 <div className="mt-2 text-xs text-gray-500 space-y-1">
-                  <p><strong>Expected:</strong> 100-500 words describing a comprehensive data science problem</p>
+                  <p><strong>Expected:</strong> 50-2000 characters describing a comprehensive data science problem</p>
                   <p><strong>Include:</strong> Clear objective, stakeholders, data sources, and success metrics</p>
                 </div>
               </div>
@@ -490,11 +490,12 @@ const ProblemWorkspace = () => {
                   onChange={(e) => setCurrentProblem(e.target.value)}
                   placeholder="Start with the seed problem 'Predict down usage to scale router upgrade' and develop it into a comprehensive data science problem. Consider: What specific WiFi usage patterns need prediction? What data sources would you use? Who are the stakeholders? What does success look like?"
                   className={`textarea h-40 ${
-                    isWordCountTooLow ? 'border-red-300 focus:border-red-500 focus:ring-red-500' :
-                    isWordCountTooHigh ? 'border-yellow-300 focus:border-yellow-500 focus:ring-yellow-500' :
-                    isWordCountValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' :
+                    isCharCountTooLow ? 'border-red-300 focus:border-red-500 focus:ring-red-500' :
+                    isCharCountTooHigh ? 'border-yellow-300 focus:border-yellow-500 focus:ring-yellow-500' :
+                    isCharCountValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' :
                     ''
                   }`}
+                  title="Write at least 50 characters to describe your WiFi infrastructure problem. Include objectives, stakeholders, data sources, and success metrics."
                   // disabled={problem?.status === 'completed'} // Temporarily enabled for testing
                 />
                 
@@ -504,70 +505,70 @@ const ProblemWorkspace = () => {
                     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
                       <div className="text-sm">
                         <div className={`font-medium ${
-                          isWordCountTooLow ? 'text-red-600' :
-                          isWordCountTooHigh ? 'text-yellow-600' :
-                          isWordCountValid ? 'text-green-600' :
+                          isCharCountTooLow ? 'text-red-600' :
+                          isCharCountTooHigh ? 'text-yellow-600' :
+                          isCharCountValid ? 'text-green-600' :
                           'text-gray-500'
                         }`}>
-                          {currentWordCount} words
-                          {isWordCountTooLow && (
+                          {currentCharCount} characters
+                          {isCharCountTooLow && (
                             <span className="ml-1 sm:ml-2 text-red-500 text-xs">
-                              (Min 100)
+                              (Min 50)
                             </span>
                           )}
-                          {isWordCountTooHigh && (
+                          {isCharCountTooHigh && (
                             <span className="ml-1 sm:ml-2 text-yellow-600 text-xs">
-                              (Max 500)
+                              (Max 2000)
                             </span>
                           )}
-                          {isWordCountValid && (
+                          {isCharCountValid && (
                             <span className="ml-1 sm:ml-2 text-green-600 text-xs">
                               ✓
                             </span>
                           )}
                         </div>
                         <div className="text-gray-500 text-xs mt-0.5">
-                          <span className="sm:hidden">100-500 expected</span>
-                          <span className="hidden sm:inline">Expected: 100-500 words</span>
+                          <span className="sm:hidden">50-2000 expected</span>
+                          <span className="hidden sm:inline">Expected: 50-2000 characters</span>
                           <span className="mx-1 sm:mx-2">•</span>
-                          <span>{currentProblem.length}/2000 chars</span>
+                          <span>{countWords(currentProblem)} words</span>
                         </div>
                       </div>
                       
                       <button
                         onClick={handleSaveProblem}
-                        disabled={isWordCountTooLow}
+                        disabled={isCharCountTooLow}
                         className={`btn text-sm self-start sm:self-auto ${
-                          isWordCountTooLow 
+                          isCharCountTooLow 
                             ? 'btn-secondary opacity-50 cursor-not-allowed' 
                             : 'btn-secondary'
                         }`}
-                        title={isWordCountTooLow ? 'Minimum 100 words required to save' : 'Save Draft'}
+                        title={isCharCountTooLow ? 'Minimum 50 characters required to save' : 'Save Draft'}
                       >
                         Save Draft
                       </button>
                     </div>
                     
                     {/* Compact progress bar - only show when needed */}
-                    {(isWordCountTooLow || currentWordCount > 0) && (
+                    {(isCharCountTooLow || currentCharCount > 0) && (
                       <div className="mt-2">
                         <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
                           <div 
                             className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
-                              isWordCountTooLow ? 'bg-red-400' :
-                              isWordCountTooHigh ? 'bg-yellow-400' :
-                              isWordCountValid ? 'bg-green-400' :
+                              isCharCountTooLow ? 'bg-red-400' :
+                              isCharCountTooHigh ? 'bg-yellow-400' :
+                              isCharCountValid ? 'bg-green-400' :
                               'bg-gray-300'
                             }`}
                             style={{ 
-                              width: `${Math.min((currentWordCount / 500) * 100, 100)}%` 
+                              width: `${Math.min((currentCharCount / 2000) * 100, 100)}%` 
                             }}
                           />
                         </div>
                         <div className="flex justify-between text-xs text-gray-400 mt-1 sm:block hidden">
                           <span>0</span>
-                          <span className="text-gray-600">100 min</span>
-                          <span>500 max</span>
+                          <span className="text-gray-600">50 min</span>
+                          <span>2000 max</span>
                         </div>
                       </div>
                     )}
@@ -610,13 +611,13 @@ const ProblemWorkspace = () => {
                     <div className="grid grid-cols-1 gap-3">
                       <button
                         onClick={() => handleGenerateResponse('editor')}
-                        disabled={isGenerating || aiLoading || isWordCountTooLow}
+                        disabled={isGenerating || aiLoading || isCharCountTooLow}
                         className={`btn flex items-center justify-between p-4 ${
                           nextPromptType === 'editor' 
                             ? 'btn-primary' 
                             : 'btn-secondary'
-                        } ${isWordCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        title={isWordCountTooLow ? 'Write at least 100 words to get AI feedback' : ''}
+                        } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : ''}
                       >
                         <div className="flex items-center space-x-2 text-left">
                           <Target className="w-5 h-5 flex-shrink-0" />
@@ -634,13 +635,13 @@ const ProblemWorkspace = () => {
 
                       <button
                         onClick={() => handleGenerateResponse('challenger')}
-                        disabled={isGenerating || aiLoading || isWordCountTooLow}
+                        disabled={isGenerating || aiLoading || isCharCountTooLow}
                         className={`btn flex items-center justify-between p-4 ${
                           nextPromptType === 'challenger' 
                             ? 'btn-primary' 
                             : 'btn-secondary'
-                        } ${isWordCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        title={isWordCountTooLow ? 'Write at least 100 words to get AI feedback' : ''}
+                        } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : ''}
                       >
                         <div className="flex items-center space-x-2 text-left">
                           <Brain className="w-5 h-5 flex-shrink-0" />
@@ -737,13 +738,13 @@ const ProblemWorkspace = () => {
                   <div className="grid grid-cols-1 gap-3">
                     <button
                       onClick={() => handleGenerateResponse('editor')}
-                      disabled={isGenerating || aiLoading || isWordCountTooLow}
+                      disabled={isGenerating || aiLoading || isCharCountTooLow}
                       className={`btn flex items-center space-x-3 p-4 ${
                         nextPromptType === 'editor' 
                           ? 'btn-primary' 
                           : 'btn-secondary'
-                      } ${isWordCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      title={isWordCountTooLow ? 'Write at least 100 words to get AI feedback' : ''}
+                      } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : ''}
                     >
                       <div className="flex items-center space-x-2">
                         <Target className="w-5 h-5" />
@@ -761,13 +762,13 @@ const ProblemWorkspace = () => {
 
                     <button
                       onClick={() => handleGenerateResponse('challenger')}
-                      disabled={isGenerating || aiLoading || isWordCountTooLow}
+                      disabled={isGenerating || aiLoading || isCharCountTooLow}
                       className={`btn flex items-center space-x-3 p-4 ${
                         nextPromptType === 'challenger' 
                           ? 'btn-primary' 
                           : 'btn-secondary'
-                      } ${isWordCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      title={isWordCountTooLow ? 'Write at least 100 words to get AI feedback' : ''}
+                      } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : ''}
                     >
                       <div className="flex items-center space-x-2">
                         <Brain className="w-5 h-5" />
@@ -874,31 +875,32 @@ const ProblemWorkspace = () => {
                   value={currentProblem}
                   onChange={(e) => setCurrentProblem(e.target.value)}
                   className={`textarea h-32 ${
-                    isWordCountTooLow ? 'border-red-300 focus:border-red-500 focus:ring-red-500' :
-                    isWordCountTooHigh ? 'border-yellow-300 focus:border-yellow-500 focus:ring-yellow-500' :
-                    isWordCountValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' :
+                    isCharCountTooLow ? 'border-red-300 focus:border-red-500 focus:ring-red-500' :
+                    isCharCountTooHigh ? 'border-yellow-300 focus:border-yellow-500 focus:ring-yellow-500' :
+                    isCharCountValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' :
                     ''
                   }`}
                   placeholder="Your final problem statement..."
+                  title="Write at least 50 characters for your final problem statement"
                 />
                 <div className={`mt-1 text-sm ${
-                  isWordCountTooLow ? 'text-red-600' :
-                  isWordCountTooHigh ? 'text-yellow-600' :
-                  isWordCountValid ? 'text-green-600' :
+                  isCharCountTooLow ? 'text-red-600' :
+                  isCharCountTooHigh ? 'text-yellow-600' :
+                  isCharCountValid ? 'text-green-600' :
                   'text-gray-500'
                 }`}>
-                  {currentWordCount} words
-                  {isWordCountTooLow && (
+                  {currentCharCount} characters
+                  {isCharCountTooLow && (
                     <span className="ml-1 sm:ml-2 text-red-500 text-xs">
-                      (Min 100)
+                      (Min 50)
                     </span>
                   )}
-                  {isWordCountTooHigh && (
+                  {isCharCountTooHigh && (
                     <span className="ml-1 sm:ml-2 text-yellow-600 text-xs">
-                      (Max 500)
+                      (Max 2000)
                     </span>
                   )}
-                  {isWordCountValid && (
+                  {isCharCountValid && (
                     <span className="ml-1 sm:ml-2 text-green-600 text-xs">
                       ✓
                     </span>
@@ -928,11 +930,11 @@ const ProblemWorkspace = () => {
             <div className="flex space-x-3 mt-6">
               <button
                 onClick={handleCompleteProblem}
-                disabled={!currentProblem.trim() || !finalReasoning.trim() || isWordCountTooLow}
+                disabled={!currentProblem.trim() || !finalReasoning.trim() || isCharCountTooLow}
                 className={`btn btn-primary flex-1 ${
-                  isWordCountTooLow ? 'opacity-50 cursor-not-allowed' : ''
+                  isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
-                title={isWordCountTooLow ? 'Minimum 100 words required to complete' : ''}
+                title={isCharCountTooLow ? 'Minimum 50 characters required to complete' : ''}
               >
                 Complete Problem
               </button>
