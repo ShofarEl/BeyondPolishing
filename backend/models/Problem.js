@@ -25,7 +25,7 @@ const problemSchema = new mongoose.Schema({
   },
   taskCategory: {
     type: String,
-    enum: ['healthcare', 'finance', 'education', 'environment', 'social', 'business', 'other'],
+    enum: ['healthcare', 'finance', 'education', 'environment', 'social', 'business', 'infrastructure', 'other'],
     required: true
   },
   
