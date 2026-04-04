@@ -373,42 +373,61 @@ const ProblemWorkspace = () => {
                 />
                 
                 {problem?.status !== 'completed' && (
-                  <div className="mt-4 flex justify-between items-center">
-                    <div className="text-sm">
-                      <div className={`font-medium ${
-                        isWordCountTooLow ? 'text-red-600' :
-                        isWordCountTooHigh ? 'text-yellow-600' :
-                        isWordCountValid ? 'text-green-600' :
-                        'text-gray-500'
-                      }`}>
-                        {currentWordCount} words
-                        {isWordCountTooLow && (
-                          <span className="ml-2 text-red-500 text-xs">
-                            (Minimum 100 words required)
-                          </span>
-                        )}
-                        {isWordCountTooHigh && (
-                          <span className="ml-2 text-yellow-600 text-xs">
-                            (Maximum 500 words recommended)
-                          </span>
-                        )}
-                        {isWordCountValid && (
-                          <span className="ml-2 text-green-600 text-xs">
-                            ✓ Good length
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-gray-500 text-xs mt-1">
-                        <span>{currentProblem.length}/2000 characters</span>
-                        <span className="mx-2">•</span>
-                        <span>Expected: 100-500 words</span>
+                  <div className="mt-3 sm:mt-4">
+                    {/* Mobile-first compact layout */}
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-2 sm:space-y-0">
+                      <div className="text-sm">
+                        <div className={`font-medium ${
+                          isWordCountTooLow ? 'text-red-600' :
+                          isWordCountTooHigh ? 'text-yellow-600' :
+                          isWordCountValid ? 'text-green-600' :
+                          'text-gray-500'
+                        }`}>
+                          {currentWordCount} words
+                          {isWordCountTooLow && (
+                            <span className="ml-1 sm:ml-2 text-red-500 text-xs">
+                              (Min 100)
+                            </span>
+                          )}
+                          {isWordCountTooHigh && (
+                            <span className="ml-1 sm:ml-2 text-yellow-600 text-xs">
+                              (Max 500)
+                            </span>
+                          )}
+                          {isWordCountValid && (
+                            <span className="ml-1 sm:ml-2 text-green-600 text-xs">
+                              ✓
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-gray-500 text-xs mt-0.5">
+                          <span className="sm:hidden">100-500 expected</span>
+                          <span className="hidden sm:inline">Expected: 100-500 words</span>
+                          <span className="mx-1 sm:mx-2">•</span>
+                          <span>{currentProblem.length}/2000 chars</span>
+                        </div>
                       </div>
                       
-                      {/* Word count progress bar */}
+                      <button
+                        onClick={handleSaveProblem}
+                        disabled={isWordCountTooLow}
+                        className={`btn text-sm self-start sm:self-auto ${
+                          isWordCountTooLow 
+                            ? 'btn-secondary opacity-50 cursor-not-allowed' 
+                            : 'btn-secondary'
+                        }`}
+                        title={isWordCountTooLow ? 'Minimum 100 words required to save' : 'Save Draft'}
+                      >
+                        Save Draft
+                      </button>
+                    </div>
+                    
+                    {/* Compact progress bar - only show when needed */}
+                    {(isWordCountTooLow || currentWordCount > 0) && (
                       <div className="mt-2">
-                        <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2">
                           <div 
-                            className={`h-2 rounded-full transition-all duration-300 ${
+                            className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                               isWordCountTooLow ? 'bg-red-400' :
                               isWordCountTooHigh ? 'bg-yellow-400' :
                               isWordCountValid ? 'bg-green-400' :
@@ -419,25 +438,13 @@ const ProblemWorkspace = () => {
                             }}
                           />
                         </div>
-                        <div className="flex justify-between text-xs text-gray-400 mt-1">
+                        <div className="flex justify-between text-xs text-gray-400 mt-1 sm:block hidden">
                           <span>0</span>
                           <span className="text-gray-600">100 min</span>
                           <span>500 max</span>
                         </div>
                       </div>
-                    </div>
-                    <button
-                      onClick={handleSaveProblem}
-                      disabled={isWordCountTooLow}
-                      className={`btn text-sm ${
-                        isWordCountTooLow 
-                          ? 'btn-secondary opacity-50 cursor-not-allowed' 
-                          : 'btn-secondary'
-                      }`}
-                      title={isWordCountTooLow ? 'Minimum 100 words required to save' : 'Save Draft'}
-                    >
-                      Save Draft
-                    </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -756,18 +763,18 @@ const ProblemWorkspace = () => {
                 }`}>
                   {currentWordCount} words
                   {isWordCountTooLow && (
-                    <span className="ml-2 text-red-500 text-xs">
-                      (Minimum 100 words required)
+                    <span className="ml-1 sm:ml-2 text-red-500 text-xs">
+                      (Min 100)
                     </span>
                   )}
                   {isWordCountTooHigh && (
-                    <span className="ml-2 text-yellow-600 text-xs">
-                      (Maximum 500 words recommended)
+                    <span className="ml-1 sm:ml-2 text-yellow-600 text-xs">
+                      (Max 500)
                     </span>
                   )}
                   {isWordCountValid && (
-                    <span className="ml-2 text-green-600 text-xs">
-                      ✓ Good length
+                    <span className="ml-1 sm:ml-2 text-green-600 text-xs">
+                      ✓
                     </span>
                   )}
                 </div>
