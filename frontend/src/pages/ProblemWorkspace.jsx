@@ -12,7 +12,7 @@ import toast from 'react-hot-toast'
 const ProblemWorkspace = () => {
   const { problemId } = useParams()
   const navigate = useNavigate()
-  const [currentProblem, setCurrentProblem] = useState('')
+  const [currentProblem, setCurrentProblem] = useState('Predict down usage to scale router upgrade')
   const [userInput, setUserInput] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
   const [showRatingModal, setShowRatingModal] = useState(false)
@@ -48,8 +48,22 @@ const ProblemWorkspace = () => {
   useEffect(() => {
     if (problemId && problemId !== 'new') {
       loadProblem()
+    } else if (problemId === 'new') {
+      // Set the fixed WiFi seed problem for new problems
+      setCurrentProblem('Predict down usage to scale router upgrade')
     }
   }, [problemId])
+
+  // Update current problem when problem data is loaded
+  useEffect(() => {
+    if (problem && problemId !== 'new') {
+      if (problem.finalProblem) {
+        setCurrentProblem(problem.finalProblem)
+      } else if (problem.initialProblem) {
+        setCurrentProblem(problem.initialProblem)
+      }
+    }
+  }, [problem, problemId])
 
   const loadProblem = async () => {
     try {
@@ -123,10 +137,10 @@ const ProblemWorkspace = () => {
 
     try {
       if (problemId === 'new') {
-        // Create new problem
+        // Create new problem with fixed WiFi seed
         const result = await useProblemStore.getState().createProblem({
-          taskPrompt: "Frame a data science problem in your chosen domain",
-          taskCategory: "other",
+          taskPrompt: "Frame a data science problem for WiFi infrastructure optimization",
+          taskCategory: "infrastructure",
           initialProblem: trimmed,
           deviceInfo: {
             userAgent: navigator.userAgent,
@@ -286,17 +300,17 @@ const ProblemWorkspace = () => {
             <div className="card">
               <div className="card-header">
                 <h2 className="text-lg font-semibold text-gray-900">
-                  Problem Statement
+                  WiFi Infrastructure Problem
                 </h2>
                 <p className="text-sm text-gray-600">
-                  Describe your data science problem in your chosen domain. Be as specific as possible about objectives, 
-                  data sources, and success metrics.
+                  Work with the provided seed problem about WiFi infrastructure optimization. 
+                  Use AI assistance to refine and reframe this problem statement.
                 </p>
                 <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded text-sm text-blue-800">
-                  <strong>Study Task:</strong> You will complete TWO problem framing tasks. Choose any domain (healthcare, finance, education, etc.) and work with AI assistance to refine your problem statements.
+                  <strong>Seed Problem:</strong> "Predict down usage to scale router upgrade" - Use AI assistance to develop this into a comprehensive data science problem statement.
                 </div>
                 <div className="mt-2 text-xs text-gray-500 space-y-1">
-                  <p><strong>Expected:</strong> 100-500 words describing a data science problem</p>
+                  <p><strong>Expected:</strong> 100-500 words describing a comprehensive data science problem</p>
                   <p><strong>Include:</strong> Clear objective, stakeholders, data sources, and success metrics</p>
                 </div>
               </div>
@@ -304,7 +318,7 @@ const ProblemWorkspace = () => {
                 <textarea
                   value={currentProblem}
                   onChange={(e) => setCurrentProblem(e.target.value)}
-                  placeholder="Example: Design a predictive model to identify hospital patients at high risk of readmission within 30 days. Using electronic health records (EHR) data including demographics, diagnoses, medications, and previous admissions..."
+                  placeholder="Start with the seed problem 'Predict down usage to scale router upgrade' and develop it into a comprehensive data science problem. Consider: What specific WiFi usage patterns need prediction? What data sources would you use? Who are the stakeholders? What does success look like?"
                   className="textarea h-40"
                   // disabled={problem?.status === 'completed'} // Temporarily enabled for testing
                 />
@@ -337,10 +351,10 @@ const ProblemWorkspace = () => {
                       AI Assistant
                     </h3>
                     <p className="text-sm text-gray-600">
-                      The AI will help you refine your problem statement. You'll interact with both Editor and Challenger modes during this study.
+                      Get AI help to refine or reframe the WiFi infrastructure problem
                     </p>
                     <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded text-xs text-blue-800">
-                      <strong>Study Requirement:</strong> Complete TWO tasks total. You'll use both Editor and Challenger modes for each task to ensure balanced data collection.
+                      <strong>Study Requirement:</strong> Work with the WiFi infrastructure seed problem using both Editor and Challenger AI modes to develop comprehensive problem framings.
                     </div>
                   </div>
                   <div className="card-body space-y-4">
@@ -474,7 +488,7 @@ const ProblemWorkspace = () => {
                     <textarea
                       value={userInput}
                       onChange={(e) => setUserInput(e.target.value)}
-                      placeholder="Example: Can you suggest alternative stakeholders for this problem? What data privacy concerns should I consider?"
+                      placeholder="Example: Can you suggest alternative stakeholders for this WiFi problem? What data privacy concerns should I consider? How might we reframe this from an equity perspective?"
                       className="textarea h-20"
                     />
                     <div className="mt-1 text-xs text-gray-500">

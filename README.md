@@ -38,10 +38,13 @@
 
 ## 🎯 Project Overview
 
-**Beyond Polishing** is a research-focused web application that investigates how different AI assistance styles impact students' ability to frame data science problems effectively. The application implements Chisom Onwumere's thesis research on AI feedback styles in educational contexts.
+**Beyond Polishing** is a research-focused web application that investigates how different AI assistance styles impact students' ability to frame WiFi infrastructure data science problems effectively. The application implements Chisom Onwumere's thesis research on AI feedback styles in educational contexts, using a fixed WiFi infrastructure seed problem to ensure consistent comparison across participants.
 
 ### Research Question
-*How do different AI prompt styles (Editor vs. Challenger modes) affect the creativity, feasibility, and reasoning quality of students' data science problem statements?*
+*How do different AI prompt styles (Editor vs. Challenger modes) affect the creativity, feasibility, and reasoning quality of students' WiFi infrastructure problem statements?*
+
+### Study Focus
+All participants work with the same seed problem: **"Predict down usage to scale router upgrade"** - allowing researchers to study how different AI prompting styles lead to different creative reframings of the same base problem.
 
 ### Key Innovation
 - **Editor Mode**: Refinement-focused AI that polishes and clarifies problem statements
@@ -53,8 +56,9 @@
 
 ### 🤖 AI-Powered Assistance
 - **Dual AI Modes**: Editor (refinement) and Challenger (counter-proposal) prompting
+- **WiFi-Focused Context**: Specialized prompts for network infrastructure problems
 - **OpenAI Integration**: GPT-3.5-turbo for cost-effective, high-quality responses
-- **Context-Aware**: AI considers user input and problem domain
+- **Context-Aware**: AI considers user input and WiFi infrastructure domain
 
 ### 👥 User Experience
 - **Responsive Design**: Mobile-first approach with desktop optimization
@@ -237,6 +241,7 @@ VITE_NODE_ENV=development
 - **Duration**: ~30 minutes per participant
 - **Design**: Between-subjects randomized controlled trial
 - **Groups**: Editor-first vs. Challenger-first
+- **Seed Problem**: "Predict down usage to scale router upgrade" (consistent across all participants)
 
 ### Data Collection
 - **Problem Statements**: Initial and refined versions

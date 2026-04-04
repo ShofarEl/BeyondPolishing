@@ -31,6 +31,7 @@ const TaskCard = ({ problem }) => {
 
   const getCategoryColor = (category) => {
     const colors = {
+      infrastructure: 'bg-blue-100 text-blue-800',
       healthcare: 'bg-red-100 text-red-800',
       finance: 'bg-green-100 text-green-800',
       education: 'bg-blue-100 text-blue-800',

@@ -13,7 +13,7 @@ const validateProblemCreation = [
     .isLength({ min: 10, max: 1000 })
     .withMessage('Task prompt must be between 10 and 1000 characters'),
   body('taskCategory')
-    .isIn(['healthcare', 'finance', 'education', 'environment', 'social', 'business', 'other'])
+    .isIn(['healthcare', 'finance', 'education', 'environment', 'social', 'business', 'infrastructure', 'other'])
     .withMessage('Valid task category required'),
   body('initialProblem')
     .trim()

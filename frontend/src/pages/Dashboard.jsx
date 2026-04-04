@@ -86,6 +86,7 @@ const Dashboard = () => {
   })
 
   const taskCategories = [
+    { id: 'infrastructure', name: 'Infrastructure', color: 'bg-blue-100 text-blue-800' },
     { id: 'healthcare', name: 'Healthcare', color: 'bg-red-100 text-red-800' },
     { id: 'finance', name: 'Finance', color: 'bg-green-100 text-green-800' },
     { id: 'education', name: 'Education', color: 'bg-blue-100 text-blue-800' },
@@ -97,26 +98,26 @@ const Dashboard = () => {
   const sampleTasks = [
     {
       id: 'task-1',
-      category: 'healthcare',
-      prompt: 'Design a data science problem to help hospitals predict patient readmission rates',
+      category: 'infrastructure',
+      prompt: 'Predict WiFi down usage to scale router upgrade - Frame this as a comprehensive data science problem with clear stakeholders and success metrics',
       difficulty: 'intermediate'
     },
     {
       id: 'task-2', 
-      category: 'education',
-      prompt: 'Frame a data science problem to improve student learning outcomes in online courses',
-      difficulty: 'beginner'
+      category: 'infrastructure',
+      prompt: 'WiFi Infrastructure Optimization - Consider alternative framings: equity, user experience, cost optimization, or predictive maintenance',
+      difficulty: 'intermediate'
     },
     {
       id: 'task-3',
-      category: 'finance',
-      prompt: 'Create a data science problem for detecting fraudulent financial transactions',
-      difficulty: 'advanced'
+      category: 'infrastructure',
+      prompt: 'Router Upgrade Planning - Explore different stakeholder perspectives: IT administrators, end users, budget managers, or facility planners',
+      difficulty: 'intermediate'
     },
     {
       id: 'task-4',
-      category: 'environment',
-      prompt: 'Formulate a data science problem to optimize renewable energy distribution',
+      category: 'infrastructure',
+      prompt: 'WiFi Usage Analytics - Consider various success metrics: performance, satisfaction, cost-effectiveness, or resource allocation fairness',
       difficulty: 'intermediate'
     }
   ]
@@ -132,7 +133,7 @@ const Dashboard = () => {
                 Welcome back, {user?.username || 'Participant'}!
               </h1>
               <p className="text-base lg:text-lg text-gray-600 font-primary">
-                Continue working on your data science problem framing tasks
+                Continue working on your WiFi infrastructure problem framing tasks
               </p>
               
               {/* Task Progress Indicator */}
@@ -402,6 +403,7 @@ const Dashboard = () => {
                       
                       <div className="flex items-center justify-between">
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                          interaction.taskCategory === 'infrastructure' ? 'bg-blue-100 text-blue-800' :
                           interaction.taskCategory === 'healthcare' ? 'bg-red-100 text-red-800' :
                           interaction.taskCategory === 'finance' ? 'bg-green-100 text-green-800' :
                           interaction.taskCategory === 'education' ? 'bg-blue-100 text-blue-800' :
@@ -444,11 +446,11 @@ const Dashboard = () => {
               <BarChart3 className="w-12 h-12 text-gray-400" />
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {selectedCategory === 'all' ? 'Ready to start your study tasks' : `No ${selectedCategory} tasks`}
+              {selectedCategory === 'all' ? 'Ready to start your WiFi infrastructure study tasks' : `No ${selectedCategory} tasks`}
             </h3>
             <p className="text-gray-600 mb-6">
               {selectedCategory === 'all' 
-                ? 'Complete TWO data science problem framing tasks with AI assistance'
+                ? 'Complete TWO WiFi infrastructure problem framing tasks with AI assistance'
                 : `You don't have any ${selectedCategory} tasks yet`
               }</p>
             {selectedCategory === 'all' && (
@@ -463,7 +465,7 @@ const Dashboard = () => {
         {problems.length === 0 && (
           <div className="mt-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Sample Problem Framing Tasks
+              WiFi Infrastructure Problem Framing Examples
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {sampleTasks.map((task) => (
@@ -481,7 +483,7 @@ const Dashboard = () => {
                     </div>
                     <p className="text-gray-700 mb-4">{task.prompt}</p>
                     <div className="text-sm text-gray-500">
-                      This is a sample task to help you understand what you'll be working on.
+                      These examples show different ways to approach the WiFi infrastructure seed problem.
                     </div>
                   </div>
                 </div>
