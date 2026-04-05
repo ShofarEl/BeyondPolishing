@@ -27,9 +27,8 @@ const ProblemWorkspace = () => {
 
   // Get character count and validation status
   const currentCharCount = currentProblem.trim().length
-  const isCharCountValid = currentCharCount >= 50 && currentCharCount <= 2000
+  const isCharCountValid = currentCharCount >= 50
   const isCharCountTooLow = currentCharCount > 0 && currentCharCount < 50
-  const isCharCountTooHigh = currentCharCount > 2000
 
   const { user, getStudyGroup } = useAuthStore()
   const { 
@@ -201,10 +200,6 @@ const ProblemWorkspace = () => {
       toast.error('Problem statement must be at least 50 characters')
       return
     }
-    if (charCount > 2000) {
-      toast.error('Problem statement should not exceed 2000 characters')
-      return
-    }
 
     try {
       if (problemId === 'new') {
@@ -260,10 +255,6 @@ const ProblemWorkspace = () => {
     const charCount = finalTrimmed.length
     if (charCount < 50) {
       toast.error('Final problem statement must be at least 50 characters')
-      return
-    }
-    if (charCount > 2000) {
-      toast.error('Final problem statement should not exceed 2000 characters')
       return
     }
     
@@ -480,7 +471,7 @@ const ProblemWorkspace = () => {
                   <strong>Seed Problem:</strong> "Predict down usage to scale router upgrade" - Use AI assistance to develop this into a comprehensive data science problem statement.
                 </div>
                 <div className="mt-2 text-xs text-gray-500 space-y-1">
-                  <p><strong>Expected:</strong> 50-2000 characters describing a comprehensive data science problem</p>
+                  <p><strong>Expected:</strong> Minimum 50 characters describing a comprehensive data science problem</p>
                   <p><strong>Include:</strong> Clear objective, stakeholders, data sources, and success metrics</p>
                 </div>
               </div>
@@ -491,7 +482,6 @@ const ProblemWorkspace = () => {
                   placeholder="Start with the seed problem 'Predict down usage to scale router upgrade' and develop it into a comprehensive data science problem. Consider: What specific WiFi usage patterns need prediction? What data sources would you use? Who are the stakeholders? What does success look like?"
                   className={`textarea h-40 ${
                     isCharCountTooLow ? 'border-red-300 focus:border-red-500 focus:ring-red-500' :
-                    isCharCountTooHigh ? 'border-yellow-300 focus:border-yellow-500 focus:ring-yellow-500' :
                     isCharCountValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' :
                     ''
                   }`}
@@ -506,7 +496,6 @@ const ProblemWorkspace = () => {
                       <div className="text-sm">
                         <div className={`font-medium ${
                           isCharCountTooLow ? 'text-red-600' :
-                          isCharCountTooHigh ? 'text-yellow-600' :
                           isCharCountValid ? 'text-green-600' :
                           'text-gray-500'
                         }`}>
@@ -516,11 +505,6 @@ const ProblemWorkspace = () => {
                               (Min 50)
                             </span>
                           )}
-                          {isCharCountTooHigh && (
-                            <span className="ml-1 sm:ml-2 text-yellow-600 text-xs">
-                              (Max 2000)
-                            </span>
-                          )}
                           {isCharCountValid && (
                             <span className="ml-1 sm:ml-2 text-green-600 text-xs">
                               ✓
@@ -528,8 +512,8 @@ const ProblemWorkspace = () => {
                           )}
                         </div>
                         <div className="text-gray-500 text-xs mt-0.5">
-                          <span className="sm:hidden">50-2000 expected</span>
-                          <span className="hidden sm:inline">Expected: 50-2000 characters</span>
+                          <span className="sm:hidden">Min 50 chars</span>
+                          <span className="hidden sm:inline">Minimum: 50 characters</span>
                           <span className="mx-1 sm:mx-2">•</span>
                           <span>{countWords(currentProblem)} words</span>
                         </div>
@@ -556,19 +540,18 @@ const ProblemWorkspace = () => {
                           <div 
                             className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                               isCharCountTooLow ? 'bg-red-400' :
-                              isCharCountTooHigh ? 'bg-yellow-400' :
                               isCharCountValid ? 'bg-green-400' :
                               'bg-gray-300'
                             }`}
                             style={{ 
-                              width: `${Math.min((currentCharCount / 2000) * 100, 100)}%` 
+                              width: `${Math.min((currentCharCount / 200) * 100, 100)}%` 
                             }}
                           />
                         </div>
                         <div className="flex justify-between text-xs text-gray-400 mt-1 sm:block hidden">
                           <span>0</span>
                           <span className="text-gray-600">50 min</span>
-                          <span>2000 max</span>
+                          <span>200+ good</span>
                         </div>
                       </div>
                     )}
@@ -617,7 +600,7 @@ const ProblemWorkspace = () => {
                             ? 'btn-primary' 
                             : 'btn-secondary'
                         } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : ''}
+                        title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to refine and improve your problem statement'}
                       >
                         <div className="flex items-center space-x-2 text-left">
                           <Target className="w-5 h-5 flex-shrink-0" />
@@ -641,7 +624,7 @@ const ProblemWorkspace = () => {
                             ? 'btn-primary' 
                             : 'btn-secondary'
                         } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : ''}
+                        title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to challenge assumptions and explore alternative problem framings'}
                       >
                         <div className="flex items-center space-x-2 text-left">
                           <Brain className="w-5 h-5 flex-shrink-0" />
@@ -744,7 +727,7 @@ const ProblemWorkspace = () => {
                           ? 'btn-primary' 
                           : 'btn-secondary'
                       } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : ''}
+                      title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to refine and improve your problem statement'}
                     >
                       <div className="flex items-center space-x-2">
                         <Target className="w-5 h-5" />
@@ -768,7 +751,7 @@ const ProblemWorkspace = () => {
                           ? 'btn-primary' 
                           : 'btn-secondary'
                       } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : ''}
+                      title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to challenge assumptions and explore alternative problem framings'}
                     >
                       <div className="flex items-center space-x-2">
                         <Brain className="w-5 h-5" />
@@ -876,7 +859,6 @@ const ProblemWorkspace = () => {
                   onChange={(e) => setCurrentProblem(e.target.value)}
                   className={`textarea h-32 ${
                     isCharCountTooLow ? 'border-red-300 focus:border-red-500 focus:ring-red-500' :
-                    isCharCountTooHigh ? 'border-yellow-300 focus:border-yellow-500 focus:ring-yellow-500' :
                     isCharCountValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' :
                     ''
                   }`}
@@ -885,7 +867,6 @@ const ProblemWorkspace = () => {
                 />
                 <div className={`mt-1 text-sm ${
                   isCharCountTooLow ? 'text-red-600' :
-                  isCharCountTooHigh ? 'text-yellow-600' :
                   isCharCountValid ? 'text-green-600' :
                   'text-gray-500'
                 }`}>
@@ -893,11 +874,6 @@ const ProblemWorkspace = () => {
                   {isCharCountTooLow && (
                     <span className="ml-1 sm:ml-2 text-red-500 text-xs">
                       (Min 50)
-                    </span>
-                  )}
-                  {isCharCountTooHigh && (
-                    <span className="ml-1 sm:ml-2 text-yellow-600 text-xs">
-                      (Max 2000)
                     </span>
                   )}
                   {isCharCountValid && (

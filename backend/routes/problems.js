@@ -17,15 +17,15 @@ const validateProblemCreation = [
     .withMessage('Valid task category required'),
   body('initialProblem')
     .trim()
-    .isLength({ min: 50, max: 2000 })
-    .withMessage('Initial problem statement must be between 50 and 2000 characters')
+    .isLength({ min: 50 })
+    .withMessage('Initial problem statement must be at least 50 characters')
 ];
 
 const validateProblemCompletion = [
   body('finalProblem')
     .trim()
-    .isLength({ min: 50, max: 2000 })
-    .withMessage('Final problem statement must be between 50 and 2000 characters'),
+    .isLength({ min: 50 })
+    .withMessage('Final problem statement must be at least 50 characters'),
   body('reasoning')
     .trim()
     .isLength({ min: 20, max: 3000 })
@@ -166,8 +166,8 @@ router.put('/:problemId', authenticateUser, [
   body('currentProblem')
     .optional()
     .trim()
-    .isLength({ min: 50, max: 2000 })
-    .withMessage('Current problem statement must be between 50 and 2000 characters')
+    .isLength({ min: 50 })
+    .withMessage('Current problem statement must be at least 50 characters')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);

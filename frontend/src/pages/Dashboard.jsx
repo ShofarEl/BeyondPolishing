@@ -291,6 +291,7 @@ const Dashboard = () => {
               <Link
                 to="/workspace/new"
                 className="btn btn-primary flex items-center space-x-2"
+                title="Create a new WiFi infrastructure problem framing task"
               >
                 <Plus className="w-5 h-5" />
                 <span>
@@ -316,6 +317,7 @@ const Dashboard = () => {
                     ? 'btn-primary' 
                     : 'btn-secondary'
                 }`}
+                title="View tasks that are currently in progress"
               >
                 Continue Tasks
               </button>
@@ -326,6 +328,7 @@ const Dashboard = () => {
                     ? 'btn-primary' 
                     : 'btn-secondary'
                 }`}
+                title="View completed tasks"
               >
                 View Completed
               </button>
@@ -336,6 +339,7 @@ const Dashboard = () => {
                     ? 'btn-primary' 
                     : 'btn-secondary'
                 }`}
+                title="View all tasks"
               >
                 All Tasks
               </button>
@@ -454,7 +458,7 @@ const Dashboard = () => {
                 : `You don't have any ${selectedCategory} tasks yet`
               }</p>
             {selectedCategory === 'all' && (
-              <Link to="/workspace/new" className="btn btn-primary">
+              <Link to="/workspace/new" className="btn btn-primary" title="Create your first WiFi infrastructure problem framing task">
                 Start Your First Task
               </Link>
             )}
