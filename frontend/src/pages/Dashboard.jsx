@@ -291,7 +291,8 @@ const Dashboard = () => {
               <Link
                 to="/workspace/new"
                 className="btn btn-primary flex items-center space-x-2"
-                title="Create a new WiFi infrastructure problem framing task"
+                data-tooltip="Create a new WiFi infrastructure problem framing task"
+                data-tooltip-variant="primary"
               >
                 <Plus className="w-5 h-5" />
                 <span>
@@ -317,7 +318,7 @@ const Dashboard = () => {
                     ? 'btn-primary' 
                     : 'btn-secondary'
                 }`}
-                title="View tasks that are currently in progress"
+                data-tooltip="View tasks that are currently in progress"
               >
                 Continue Tasks
               </button>
@@ -328,7 +329,8 @@ const Dashboard = () => {
                     ? 'btn-primary' 
                     : 'btn-secondary'
                 }`}
-                title="View completed tasks"
+                data-tooltip="View completed tasks"
+                data-tooltip-variant="success"
               >
                 View Completed
               </button>
@@ -339,7 +341,7 @@ const Dashboard = () => {
                     ? 'btn-primary' 
                     : 'btn-secondary'
                 }`}
-                title="View all tasks"
+                data-tooltip="View all tasks"
               >
                 All Tasks
               </button>
@@ -458,7 +460,7 @@ const Dashboard = () => {
                 : `You don't have any ${selectedCategory} tasks yet`
               }</p>
             {selectedCategory === 'all' && (
-              <Link to="/workspace/new" className="btn btn-primary" title="Create your first WiFi infrastructure problem framing task">
+              <Link to="/workspace/new" className="btn btn-primary" data-tooltip="Create your first WiFi infrastructure problem framing task" data-tooltip-variant="primary">
                 Start Your First Task
               </Link>
             )}

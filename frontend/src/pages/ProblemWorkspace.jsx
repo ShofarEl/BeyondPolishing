@@ -376,7 +376,8 @@ const ProblemWorkspace = () => {
                 className={`btn btn-primary flex items-center space-x-2 text-sm ${
                   isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
-                title={isCharCountTooLow ? 'Write at least 50 characters before completing' : ''}
+                data-tooltip={isCharCountTooLow ? 'Write at least 50 characters before completing' : 'Complete your problem framing task'}
+                data-tooltip-variant={isCharCountTooLow ? 'error' : 'success'}
               >
                 <CheckCircle className="w-4 h-4" />
                 <span className="hidden sm:inline">Complete</span>
@@ -485,7 +486,8 @@ const ProblemWorkspace = () => {
                     isCharCountValid ? 'border-green-300 focus:border-green-500 focus:ring-green-500' :
                     ''
                   }`}
-                  title="Write at least 50 characters to describe your WiFi infrastructure problem. Include objectives, stakeholders, data sources, and success metrics."
+                  data-tooltip="Write at least 50 characters to describe your WiFi infrastructure problem. Include objectives, stakeholders, data sources, and success metrics."
+                  data-tooltip-pos="top"
                   // disabled={problem?.status === 'completed'} // Temporarily enabled for testing
                 />
                 
@@ -527,7 +529,8 @@ const ProblemWorkspace = () => {
                             ? 'btn-secondary opacity-50 cursor-not-allowed' 
                             : 'btn-secondary'
                         }`}
-                        title={isCharCountTooLow ? 'Minimum 50 characters required to save' : 'Save Draft'}
+                        data-tooltip={isCharCountTooLow ? 'Write at least 50 characters to save' : 'Save your current progress'}
+                        data-tooltip-variant={isCharCountTooLow ? 'error' : 'primary'}
                       >
                         Save Draft
                       </button>
@@ -600,7 +603,8 @@ const ProblemWorkspace = () => {
                             ? 'btn-primary' 
                             : 'btn-secondary'
                         } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to refine and improve your problem statement'}
+                        data-tooltip={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to refine and improve your problem statement'}
+                        data-tooltip-variant={isCharCountTooLow ? 'error' : 'primary'}
                       >
                         <div className="flex items-center space-x-2 text-left">
                           <Target className="w-5 h-5 flex-shrink-0" />
@@ -624,7 +628,8 @@ const ProblemWorkspace = () => {
                             ? 'btn-primary' 
                             : 'btn-secondary'
                         } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                        title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to challenge assumptions and explore alternative problem framings'}
+                        data-tooltip={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to challenge assumptions and explore alternative problem framings'}
+                        data-tooltip-variant={isCharCountTooLow ? 'error' : 'warning'}
                       >
                         <div className="flex items-center space-x-2 text-left">
                           <Brain className="w-5 h-5 flex-shrink-0" />
@@ -727,7 +732,8 @@ const ProblemWorkspace = () => {
                           ? 'btn-primary' 
                           : 'btn-secondary'
                       } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to refine and improve your problem statement'}
+                      data-tooltip={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to refine and improve your problem statement'}
+                      data-tooltip-variant={isCharCountTooLow ? 'error' : 'primary'}
                     >
                       <div className="flex items-center space-x-2">
                         <Target className="w-5 h-5" />
@@ -751,7 +757,8 @@ const ProblemWorkspace = () => {
                           ? 'btn-primary' 
                           : 'btn-secondary'
                       } ${isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      title={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to challenge assumptions and explore alternative problem framings'}
+                      data-tooltip={isCharCountTooLow ? 'Write at least 50 characters to get AI feedback' : 'Get AI help to challenge assumptions and explore alternative problem framings'}
+                      data-tooltip-variant={isCharCountTooLow ? 'error' : 'warning'}
                     >
                       <div className="flex items-center space-x-2">
                         <Brain className="w-5 h-5" />
@@ -863,7 +870,8 @@ const ProblemWorkspace = () => {
                     ''
                   }`}
                   placeholder="Your final problem statement..."
-                  title="Write at least 50 characters for your final problem statement"
+                  data-tooltip="Write at least 50 characters for your final problem statement"
+                  data-tooltip-pos="top"
                 />
                 <div className={`mt-1 text-sm ${
                   isCharCountTooLow ? 'text-red-600' :
@@ -910,7 +918,8 @@ const ProblemWorkspace = () => {
                 className={`btn btn-primary flex-1 ${
                   isCharCountTooLow ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
-                title={isCharCountTooLow ? 'Minimum 50 characters required to complete' : ''}
+                data-tooltip={isCharCountTooLow ? 'Minimum 50 characters required to complete' : 'Complete your problem framing task'}
+                data-tooltip-variant={isCharCountTooLow ? 'error' : 'success'}
               >
                 Complete Problem
               </button>

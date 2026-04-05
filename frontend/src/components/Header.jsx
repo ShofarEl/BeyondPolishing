@@ -24,7 +24,7 @@ const Header = () => {
           <Link 
             to="/" 
             className="flex items-center space-x-3"
-            title="Go to home page"
+            data-tooltip="Go to home page"
           >
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <Brain className="w-5 h-5 text-white" />
@@ -40,7 +40,7 @@ const Header = () => {
             <Link
               to="/"
               className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 transition-colors"
-              title="Go to home page"
+              data-tooltip="Go to home page"
             >
               <Home className="w-4 h-4" />
               <span>Home</span>
@@ -51,7 +51,7 @@ const Header = () => {
                 <Link
                   to="/dashboard"
                   className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 transition-colors"
-                  title="View your study dashboard and progress"
+                  data-tooltip="View your study dashboard and progress"
                 >
                   <BarChart3 className="w-4 h-4" />
                   <span>Dashboard</span>
@@ -59,7 +59,7 @@ const Header = () => {
                 <Link
                   to="/profile"
                   className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 transition-colors"
-                  title="View and edit your profile"
+                  data-tooltip="View and edit your profile"
                 >
                   <User className="w-4 h-4" />
                   <span>Profile</span>
@@ -87,7 +87,7 @@ const Header = () => {
                   <Link
                     to="/profile"
                     className="btn btn-secondary text-sm px-3 py-1"
-                    title="View and edit your profile"
+                    data-tooltip="View and edit your profile"
                   >
                     Profile
                   </Link>
@@ -95,7 +95,8 @@ const Header = () => {
                   <button
                     onClick={handleLogout}
                     className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                    title="Logout from your account"
+                    data-tooltip="Logout from your account"
+                    data-tooltip-variant="warning"
                   >
                     <LogOut className="w-5 h-5" />
                   </button>
@@ -105,7 +106,8 @@ const Header = () => {
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="md:hidden p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                  title="Open navigation menu"
+                  data-tooltip="Open navigation menu"
+                  data-tooltip-pos="bottom"
                 >
                   {isMobileMenuOpen ? (
                     <X className="w-5 h-5" />
@@ -121,7 +123,8 @@ const Header = () => {
                   <Link
                     to="/register"
                     className="btn btn-primary"
-                    title="Start participating in the study"
+                    data-tooltip="Start participating in the study"
+                    data-tooltip-variant="primary"
                   >
                     Start Study
                   </Link>
@@ -131,7 +134,8 @@ const Header = () => {
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="md:hidden p-2 text-gray-400 hover:text-gray-600 transition-colors"
-                  title="Open navigation menu"
+                  data-tooltip="Open navigation menu"
+                  data-tooltip-pos="bottom"
                 >
                   {isMobileMenuOpen ? (
                     <X className="w-5 h-5" />
