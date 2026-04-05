@@ -25,6 +25,7 @@ const Header = () => {
             to="/" 
             className="flex items-center space-x-3"
             data-tooltip="Go to home page"
+            data-tooltip-pos="bottom"
           >
             <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
               <Brain className="w-5 h-5 text-white" />
@@ -41,6 +42,7 @@ const Header = () => {
               to="/"
               className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 transition-colors"
               data-tooltip="Go to home page"
+              data-tooltip-pos="bottom"
             >
               <Home className="w-4 h-4" />
               <span>Home</span>
@@ -52,6 +54,7 @@ const Header = () => {
                   to="/dashboard"
                   className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 transition-colors"
                   data-tooltip="View your study dashboard and progress"
+                  data-tooltip-pos="bottom"
                 >
                   <BarChart3 className="w-4 h-4" />
                   <span>Dashboard</span>
@@ -60,6 +63,7 @@ const Header = () => {
                   to="/profile"
                   className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 transition-colors"
                   data-tooltip="View and edit your profile"
+                  data-tooltip-pos="bottom"
                 >
                   <User className="w-4 h-4" />
                   <span>Profile</span>
@@ -88,6 +92,7 @@ const Header = () => {
                     to="/profile"
                     className="btn btn-secondary text-sm px-3 py-1"
                     data-tooltip="View and edit your profile"
+                    data-tooltip-pos="bottom"
                   >
                     Profile
                   </Link>
@@ -97,6 +102,7 @@ const Header = () => {
                     className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
                     data-tooltip="Logout from your account"
                     data-tooltip-variant="warning"
+                    data-tooltip-pos="bottom"
                   >
                     <LogOut className="w-5 h-5" />
                   </button>
@@ -125,6 +131,7 @@ const Header = () => {
                     className="btn btn-primary"
                     data-tooltip="Start participating in the study"
                     data-tooltip-variant="primary"
+                    data-tooltip-pos="bottom"
                   >
                     Start Study
                   </Link>
