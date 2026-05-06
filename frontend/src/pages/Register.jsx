@@ -87,26 +87,31 @@ const Register = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="card">
           <div className="card-body">
-            {/* Consent Section */}
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h3 className="text-sm font-semibold text-blue-900 mb-3">Informed Consent</h3>
-              <div className="text-xs text-blue-800 space-y-2 mb-3">
-                <p>By participating, you agree that:</p>
-                <ul className="list-disc list-inside space-y-1 ml-2">
-                  <li>Your participation is voluntary (≈30 minutes)</li>
-                  <li>Your responses will be collected anonymously for research</li>
-                  <li>You can stop at any time</li>
-                  <li>You are at least 18 years old</li>
+            {/* Consent Section - Enhanced Visibility */}
+            <div className="mb-6 p-5 bg-blue-50 border-2 border-blue-300 rounded-lg shadow-sm relative z-10">
+              <h3 className="text-base font-bold text-blue-900 mb-4 flex items-center">
+                <Shield className="w-5 h-5 mr-2" />
+                Informed Consent
+              </h3>
+              <div className="text-sm text-blue-900 space-y-2 mb-4 leading-relaxed">
+                <p className="font-semibold">By participating, you agree that:</p>
+                <ul className="list-disc list-inside space-y-2 ml-2">
+                  <li className="pl-1">Your participation is voluntary (≈30 minutes)</li>
+                  <li className="pl-1">Your responses will be collected anonymously for research</li>
+                  <li className="pl-1">You can stop at any time</li>
+                  <li className="pl-1">You are at least 18 years old</li>
                 </ul>
               </div>
-              <label className="flex items-start cursor-pointer touch-manipulation">
+              <label className="flex items-start cursor-pointer touch-manipulation p-3 bg-white border-2 border-blue-200 rounded-lg hover:bg-blue-50 transition-colors">
                 <input
                   type="checkbox"
                   checked={consent}
                   onChange={(e) => setConsent(e.target.checked)}
-                  className="mt-0.5 mr-3 h-5 w-5 min-w-[1.25rem] text-primary-600 focus:ring-primary-500 border-gray-300 rounded flex-shrink-0"
+                  className="consent-checkbox text-primary-600 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 border-2 border-gray-400 rounded cursor-pointer"
+                  style={{ accentColor: '#2563eb' }}
+                  aria-label="Consent to participate in research study"
                 />
-                <span className="text-xs text-blue-900 leading-relaxed">
+                <span className="text-sm text-blue-900 font-medium leading-relaxed">
                   I consent to participate in this research study
                 </span>
               </label>
